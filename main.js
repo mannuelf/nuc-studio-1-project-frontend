@@ -1,4 +1,4 @@
-var mymap = L.map('mapid').setView([40, 10], 4);
+const mymap = L.map('mapid').setView([40, 10], 4);
 
 L.tileLayer('https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=hoLGIxuie3cF9jQ7nX7M', {
 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
