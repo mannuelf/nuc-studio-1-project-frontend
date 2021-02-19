@@ -16,16 +16,18 @@ Install the npm packages using the terminal. This will install ParcelJs a modern
 npm install
 ```
 
-## But why??
-
-We want to write with modern JavaScript features and workflow. I have made the files typescript so that we can get better error linting.
-
-Just write normal JavaScript in the TypeScript file, valid JavaScript is valid TypeScript.
-
 ## Start the development server
 
 ```bash
 npm run develop
 ```
 
-Navigate to [http://localhost:1234](http://localhost:1234)
+Start coding and Navigate to [http://localhost:1234](http://localhost:1234)
+
+## But why?
+
+We want to write with modern ES6 JavaScript with imports & exports + TypeScript. I have made the files TypeScript so that we can get better error linting.
+
+Just write normal JavaScript in the TypeScript file, valid JavaScript is valid TypeScript.
+
+Parcel will compile your the modern JS into ES5 for older browser support.
