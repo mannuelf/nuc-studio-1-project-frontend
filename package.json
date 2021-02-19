@@ -26,5 +26,8 @@
   "homepage": "https://github.com/mannuelf/nuc-studio-1-project-frontend#readme",
   "dependencies": {
     "parcel-bundler": "^1.12.4"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.5"
   }
 }
