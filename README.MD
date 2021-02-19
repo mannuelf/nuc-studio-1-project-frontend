@@ -20,4 +20,4 @@ npm install
 npm run develop
 ```
 
-Navigate to [http://localhost:1234 ](http://localhost:1234)
+Navigate to [http://localhost:1234](http://localhost:1234)
