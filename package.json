@@ -1,0 +1,30 @@
+{
+  "name": "nuc-studio-1-project-frontend",
+  "version": "1.0.0",
+  "description": "Factbook Explorer, read economic data about your country.",
+  "main": "index.js",
+  "scripts": {
+    "develop": "parcel src/*.html",
+    "build": "parcel build src/*.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mannuelf/nuc-studio-1-project-frontend.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "HTML",
+    "CSS",
+    "API"
+  ],
+  "author": "mannuelf <mannuel.ferreira@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mannuelf/nuc-studio-1-project-frontend/issues"
+  },
+  "homepage": "https://github.com/mannuelf/nuc-studio-1-project-frontend#readme",
+  "dependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}
