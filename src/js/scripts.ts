@@ -1,9 +1,19 @@
-L.mapbox.accessToken =
-  "pk.eyJ1Ijoic2lsZW50OTgiLCJhIjoiY2toNHB1Y3FqMDJ0ZTJ4bXg5bW9uYW96dyJ9.ytYNRy4WL7oEZeR43Wc2Jw";
+import * as L from "leaflet/dist/leaflet-src.esm";
 
-var map = L.mapbox
-  .map("map")
-  .setView([40, -74.5], 9)
-  .addLayer(
-    L.mapbox.styleLayer("mapbox://styles/silent98/ckh4pwud40y9119lg23u9yjh6")
-  );
+const mainMap = L.map("map").setView([40, 10], 4);
+
+const myToken =
+  "pk.eyJ1IjoibWFubnVlbGYiLCJhIjoiY2tsYzZvNDZsMG05ZjJwcDB1OGg0MXJ2NiJ9.g5VNTSuAnyZ45zg9lsZgOg";
+
+L.tileLayer(
+  `https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${myToken}`,
+  {
+    attribution:
+      'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: "mapbox/streets-v11",
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: `${myToken}`,
+  }
+).addTo(mainMap);
