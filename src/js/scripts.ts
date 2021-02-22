@@ -3,6 +3,9 @@ import { config, myToken } from "./config";
 
 const mainMap = L.map("map").setView([40, 10], 4);
 
+console.log(typeof mainMap, mainMap);
+// the site auto reloads after you type
+
 L.tileLayer(`${config.apiMapBoxUrl}`, {
   attribution: config.mapBoxAttribution,
   maxZoom: 18,
@@ -11,3 +14,5 @@ L.tileLayer(`${config.apiMapBoxUrl}`, {
   zoomOffset: -1,
   accessToken: `${myToken}`,
 }).addTo(mainMap);
+
+// add all your code here.
