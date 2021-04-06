@@ -25,7 +25,7 @@ map.on('load', function () {
   map.getCanvas().style.cursor = 'default';
 
   // define layer names
-  var layers = [
+  const layers = [
     '0-10',
     '10-20',
     '20-50',
@@ -35,7 +35,8 @@ map.on('load', function () {
     '500-1000',
     '1000+',
   ];
-  var colors = [
+
+  const colors = [
     '#FFEDA0',
     '#FED976',
     '#FEB24C',
@@ -48,14 +49,14 @@ map.on('load', function () {
 
   // create legend
   for (let i = 0; i < layers.length; i++) {
-    var layer = layers[i];
-    var color = colors[i];
-    var item = document.createElement('div');
-    var key = document.createElement('span');
+    let layer = layers[i];
+    let color = colors[i];
+    let item = document.createElement('div');
+    let key = document.createElement('span');
     key.className = 'legend-key';
     key.style.backgroundColor = color;
 
-    var value = document.createElement('span');
+    let value = document.createElement('span');
     value.innerHTML = layer;
     item.appendChild(key);
     item.appendChild(value);
