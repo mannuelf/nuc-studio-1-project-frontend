@@ -1,15 +1,17 @@
 import * as L from 'leaflet/dist/leaflet-src.esm';
-import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
-import { config, myToken } from './config';
+import mapboxgl from 'mapbox-gl';
+import { config, styleUrl, myToken } from './config';
 
 mapboxgl.accessToken = myToken;
 
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/streets-v11',
+  style: styleUrl,
 });
 
-map.on('load', () => {
+// wait for map to load before adjusting it
+// https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2/
+map.on('load', function () {
   // make a pointer cursor
   map.getCanvas().style.cursor = 'default';
 
@@ -19,9 +21,11 @@ map.on('load', () => {
     [-47.63671875, 52.696361],
   ]);
 
+  // make a pointer cursor
   map.getCanvas().style.cursor = 'default';
 
-  const layers = [
+  // define layer names
+  var layers = [
     '0-10',
     '10-20',
     '20-50',
@@ -29,10 +33,9 @@ map.on('load', () => {
     '100-200',
     '200-500',
     '500-1000',
-    '10000+',
+    '1000+',
   ];
-
-  const colors = [
+  var colors = [
     '#FFEDA0',
     '#FED976',
     '#FEB24C',
@@ -43,16 +46,16 @@ map.on('load', () => {
     '#800026',
   ];
 
-  // add legend
+  // create legend
   for (let i = 0; i < layers.length; i++) {
-    const layer = layers[i];
-    const color = colors[i];
-    const item = document.createElement('div');
-    const key = document.createElement('span');
+    var layer = layers[i];
+    var color = colors[i];
+    var item = document.createElement('div');
+    var key = document.createElement('span');
     key.className = 'legend-key';
     key.style.backgroundColor = color;
 
-    let value = document.createElement('span');
+    var value = document.createElement('span');
     value.innerHTML = layer;
     item.appendChild(key);
     item.appendChild(value);
@@ -60,16 +63,38 @@ map.on('load', () => {
   }
 
   // change info window on hover
-  map.on('mousemove', (e) => {
-    const states = map.queryRenderedFeatures(e.point, {
-      layers: ['statedata'],
+  map.on('mousemove', function (e) {
+    const features = map.queryRenderedFeatures();
+    console.log(typeof features, features);
+
+    const displayProperties = [
+      'type',
+      'properties',
+      'id',
+      'layer',
+      'source',
+      'sourceLayer',
+      'state',
+    ];
+
+    // https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures/
+    const displayFeatures = features.map((feat) => {
+      let displayFeat = {};
+
+      displayProperties.forEach((prop) => {
+        displayFeat[prop] = feat[prop];
+      });
+      return displayFeat;
     });
-    if (states.length > 0) {
+
+    console.log(displayFeatures);
+
+    if (features.length > 0) {
       document.getElementById('pd').innerHTML =
         '<h3><strong>' +
-        states[0].properties.name +
+        features[0].properties.name +
         '</strong></h3><p><strong><em>' +
-        states[0].properties.density +
+        features[0].properties.density +
         '</strong> people per square mile</em></p>';
     } else {
       document.getElementById('pd').innerHTML = '<p>Hover over a state!</p>';
