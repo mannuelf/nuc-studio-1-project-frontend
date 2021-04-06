@@ -14,14 +14,18 @@
       crossorigin=""
     />
     <link
-      href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css"
+      href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css"
       rel="stylesheet"
     />
-    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js"></script>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
     <div id="map"></div>
+    <div class="map-overlay" id="features">
+      <h2>US population density</h2>
+      <div id="pd"><p>Hover over a state!</p></div>
+    </div>
+    <div class="map-overlay" id="legend"></div>
     <script src="./js/scripts.ts"></script>
   </body>
 </html>
