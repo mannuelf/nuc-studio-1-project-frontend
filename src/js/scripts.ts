@@ -9,8 +9,8 @@ const map = new mapboxgl.Map({
   style: MAPBOX_STYLE_URL,
 });
 
-// wait for map to load before adjusting it
 // https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2/
+// this code is code version of https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1/
 map.on('load', function () {
   // make a pointer cursor
   map.getCanvas().style.cursor = 'default';
@@ -85,12 +85,10 @@ map.on('load', function () {
     console.log(displayFeatures);
 
     if (features.length > 0) {
-      document.getElementById('pd').innerHTML =
-        '<h3><strong>' +
-        features[0].properties.name +
-        '</strong></h3><p><strong><em>' +
-        features[0].properties.density +
-        '</strong> people per square mile</em></p>';
+      document.getElementById(
+        'pd'
+      ).innerHTML = `<h3>${features[0].properties.name}</h3>
+        <p><strong>${features[0].properties.density}</strong> people per square mile</p>`;
     } else {
       document.getElementById('pd').innerHTML = '<p>Hover over a state!</p>';
     }
