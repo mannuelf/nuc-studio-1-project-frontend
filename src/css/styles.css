@@ -1,22 +1,10 @@
-body {
-  margin: 0;
-  padding: 0;
+.nav-bar {
+  z-index: 9999;
 }
 
-h2,
-h3 {
-  margin: 10px;
-  font-size: 1.2em;
-}
-
-h3 {
-  font-size: 1em;
-}
-
-p {
-  font-size: 0.85em;
-  margin: 10px;
-  text-align: left;
+.ui-fbe-logo {
+  background-color: #0094ff;
+  color: #fff;
 }
 
 /**
@@ -46,18 +34,18 @@ p {
 
 #features {
   top: 0;
-  height: 100px;
+  height: 180px;
   margin-top: 20px;
   width: 250px;
+  padding: 1rem;
 }
 
 #legend {
   padding: 10px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  lin-height: 18px;
-  height: 150px;
+  line-height: 18px;
   margin-bottom: 40px;
-  width: 100px;
+  width: 140px;
 }
 
 .legend-key {

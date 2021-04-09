@@ -1,6 +1,13 @@
 import mapboxgl from 'mapbox-gl';
 import { MAPBOX_TOKEN, MAPBOX_STYLE_URL } from './config/index';
 import { USA, NORWAY } from './config/countries';
+import { setNavBar } from './setNavBar';
+import { searchBar } from './searchBar';
+
+window.addEventListener('DOMContentLoaded', () => {
+  setNavBar();
+  searchBar();
+});
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -16,7 +23,12 @@ map.on('load', function () {
   map.getCanvas().style.cursor = 'default';
 
   // set map bounds to the continental US
-  map.fitBounds(NORWAY);
+  map.fitBounds([
+    4.40079698619525,
+    57.906609500058,
+    31.2678854952283,
+    71.2176742998415,
+  ]);
 
   // define layer names
   const layers = [
@@ -42,6 +54,8 @@ map.on('load', function () {
   ];
 
   // create legend
+  let legend = document.querySelector('#legend');
+
   for (let i = 0; i < layers.length; i++) {
     let layer = layers[i];
     let color = colors[i];
@@ -60,7 +74,6 @@ map.on('load', function () {
   // change info window on hover
   map.on('mousemove', function (e) {
     const features = map.queryRenderedFeatures();
-    console.log(typeof features, features);
 
     const displayProperties = [
       'type',
@@ -82,15 +95,14 @@ map.on('load', function () {
       return displayFeat;
     });
 
-    console.log(displayFeatures);
-
     if (features.length > 0) {
       document.getElementById(
-        'pd'
+        'ui-info-box'
       ).innerHTML = `<h3>${features[0].properties.name}</h3>
         <p><strong>${features[0].properties.density}</strong> people per square mile</p>`;
     } else {
-      document.getElementById('pd').innerHTML = '<p>Hover over a state!</p>';
+      document.getElementById('ui-info-box').innerHTML =
+        '<p>Hover over a state!</p>';
     }
   });
 });

@@ -17,15 +17,84 @@
       href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="../node_modules/bulma/css/bulma.min.css" />
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <div id="map"></div>
-    <div class="map-overlay" id="features">
-      <h2>US population density</h2>
-      <div id="pd"><p>Hover over a state!</p></div>
+    <nav
+      class="navbar is-fixed-bottom"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div class="navbar-brand">
+        <a class="navbar-item ui-fbe-logo" href="./">
+          <span width="112" height="28"
+            ><strong>FactBook</strong> <br />
+            Explorers</span
+          >
+        </a>
+
+        <form id="searchBar" class="mt-3 ml-2">
+          <div class="control is-loading">
+            <label for="search" class="is-sr-only">Search for country</label>
+            <input class="input" type="search" placeholder="Enter country" />
+          </div>
+        </form>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item"> Home </a>
+
+          <a class="navbar-item"> Documentation </a>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link"> More </a>
+
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> About </a>
+              <a class="navbar-item"> Jobs </a>
+              <a class="navbar-item"> Contact </a>
+              <hr class="navbar-divider" />
+              <a class="navbar-item"> Report an issue </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-primary">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-light"> Log in </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="ui-map-section">
+      <div id="map"></div>
+      <div class="map-overlay" id="features">
+        <h2>US population density</h2>
+        <div id="ui-info-box"><p>Hover over a state!</p></div>
+      </div>
+      <div class="map-overlay" id="legend"></div>
     </div>
-    <div class="map-overlay" id="legend"></div>
+
     <script src="./js/scripts.ts"></script>
   </body>
 </html>

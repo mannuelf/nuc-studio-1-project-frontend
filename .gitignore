@@ -1,11 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-.cache
-dist
-.DS_Store
-.vscode
-.idea
-
 # dependencies
 /node_modules
 /.pnp
@@ -22,6 +16,10 @@ dist
 /build
 
 # misc
+.cache
+dist
+.vscode
+.idea
 .DS_Store
 
 # debug
