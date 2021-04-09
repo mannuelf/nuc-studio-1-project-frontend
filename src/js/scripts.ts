@@ -1,6 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import { MAPBOX_TOKEN, MAPBOX_STYLE_URL } from './config/index';
-import { USA, NORWAY } from './config/countries';
+import { MAPBOX_TOKEN, MAPBOX_STYLE_URI } from './constants';
 import { setNavBar } from './setNavBar';
 import { searchBar } from './searchBar';
 
@@ -13,12 +12,15 @@ mapboxgl.accessToken = MAPBOX_TOKEN;
 
 const map = new mapboxgl.Map({
   container: 'map',
-  style: MAPBOX_STYLE_URL,
+  style: MAPBOX_STYLE_URI,
 });
 
 // https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2/
 // this code is code version of https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1/
-map.on('load', function () {
+map.on('load', async function () {
+  const countryLocation = await searchBar();
+
+  console.log(countryLocation);
   // make a pointer cursor
   map.getCanvas().style.cursor = 'default';
 
