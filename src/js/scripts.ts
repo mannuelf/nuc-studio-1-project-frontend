@@ -1,12 +1,12 @@
-import * as L from 'leaflet/dist/leaflet-src.esm';
 import mapboxgl from 'mapbox-gl';
-import { config, styleUrl, myToken } from './config';
+import { MAPBOX_TOKEN, MAPBOX_STYLE_URL } from './config/index';
+import { USA, NORWAY } from './config/countries';
 
-mapboxgl.accessToken = myToken;
+mapboxgl.accessToken = MAPBOX_TOKEN;
 
 const map = new mapboxgl.Map({
   container: 'map',
-  style: styleUrl,
+  style: MAPBOX_STYLE_URL,
 });
 
 // wait for map to load before adjusting it
@@ -16,13 +16,7 @@ map.on('load', function () {
   map.getCanvas().style.cursor = 'default';
 
   // set map bounds to the continental US
-  map.fitBounds([
-    [-133.2421875, 16.972741],
-    [-47.63671875, 52.696361],
-  ]);
-
-  // make a pointer cursor
-  map.getCanvas().style.cursor = 'default';
+  map.fitBounds(NORWAY);
 
   // define layer names
   const layers = [
