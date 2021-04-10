@@ -23,7 +23,6 @@ export default function MapBoxService() {
   // https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2/
   // this code is code version of https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1/
   map.on('load', () => {
-    console.log(NORWAY)
     const defaultLocation = NORWAY;
     const searchForm = document.querySelector('#searchBar');
     
