@@ -1,5 +1,7 @@
 # Factbook Explorers
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/716d0bd0-6c7c-4897-bb4c-bc548927b03e/deploy-status)](https://app.netlify.com/sites/factbookexplorers/deploys)
+
 ## Built with
 
 This project is built with node.js and ParcelJs, install both on your machine.
