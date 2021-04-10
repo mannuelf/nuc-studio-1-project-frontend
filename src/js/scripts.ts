@@ -1,11 +1,14 @@
 import mapboxgl from 'mapbox-gl';
-import { MAPBOX_TOKEN, MAPBOX_STYLE_URI } from './constants';
+import {
+  MAPBOX_TOKEN,
+  MAPBOX_STYLE_URI,
+  ENDPOINT_GEOCODING,
+} from './constants';
 import { setNavBar } from './setNavBar';
-import { searchBar } from './searchBar';
+import axios from 'axios';
 
 window.addEventListener('DOMContentLoaded', () => {
   setNavBar();
-  searchBar();
 });
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -17,20 +20,31 @@ const map = new mapboxgl.Map({
 
 // https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2/
 // this code is code version of https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1/
-map.on('load', async function () {
-  const countryLocation = await searchBar();
+map.on('load', () => {
+  const defaultLocation = [-83.442922, 42.261212, -83.324045, 42.334184];
 
-  console.log(countryLocation);
+  const searchForm = document.querySelector('#searchBar');
+
+  const bboxCoordinates = () => {
+    searchForm.addEventListener('submit', async (e: any): Promise<any> => {
+      e.preventDefault();
+      const searchInput = e.currentTarget[0];
+      const userInput = searchInput.value.toLowerCase().replace('', '_');
+      const response = await axios.get(`${ENDPOINT_GEOCODING}/${userInput}.json?limit=2&access_token=${MAPBOX_TOKEN}`);
+      const bboxCoordinates = response.data.features[0]
+      // set the map with user searched location
+      map.fitBounds(bboxCoordinates.bbox)
+      return bboxCoordinates.bbox || false;
+    }
+  }
+
   // make a pointer cursor
   map.getCanvas().style.cursor = 'default';
 
-  // set map bounds to the continental US
-  map.fitBounds([
-    4.40079698619525,
-    57.906609500058,
-    31.2678854952283,
-    71.2176742998415,
-  ]);
+  const setMapUserEntered = bboxCoordinates() ? bboxCoordinates : defaultLocation;
+  
+  // set map bounds to a continent
+  map.fitBounds(setMapUserEntered);
 
   // define layer names
   const layers = [
