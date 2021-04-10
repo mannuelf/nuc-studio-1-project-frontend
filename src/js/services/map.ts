@@ -6,11 +6,10 @@ import {
   MAPBOX_STYLE_URI,
   ENDPOINT_GEOCODING,
 } from '../config/constants';
-import {NORWAY} from '../config/countries';
+import { NORWAY } from '../config/countries';
 
 export default function MapBoxService() {
   // Init MapBox Service.
-
   mapboxgl.accessToken = MAPBOX_TOKEN;
 
   const map = new mapboxgl.Map({
