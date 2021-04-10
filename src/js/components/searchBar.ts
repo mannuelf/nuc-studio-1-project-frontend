@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import axios from 'axios';
-import { ENDPOINT_GEOCODING, MAPBOX_TOKEN } from './constants';
+import { ENDPOINT_GEOCODING, MAPBOX_TOKEN } from '../config/constants';
 
 export const searchBar = async () => {
   const searchForm = document.querySelector('#searchBar') as HTMLFormElement;
