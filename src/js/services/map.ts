@@ -35,8 +35,9 @@ export default function MapBoxService() {
      * */
     const defaultLocation = NORWAY;
     const searchForm = document.querySelector('#searchBar');
-    
-    const bboxCoordinates = () => {
+    let bbox = [];
+
+    const getBboxCoordinates = () => {
       searchForm.addEventListener('submit', async (e: any): Promise<IbboxGps> => {
         e.preventDefault();
         const [searchInput] = e.currentTarget;
@@ -45,6 +46,7 @@ export default function MapBoxService() {
         const [bboxCoordinates] = response.data.features; // get pgs coord out of api
         map.fitBounds(bboxCoordinates.bbox); // set the map with user searched locatio
         searchInput.value = ''; // clear the input text
+        bbox = bboxCoordinates.bbox;
         return bboxCoordinates.bbox;
       }
     }
@@ -52,7 +54,7 @@ export default function MapBoxService() {
     // make a pointer cursor
     map.getCanvas().style.cursor = 'default';
 
-    const bboxGps = bboxCoordinates() ? bboxCoordinates : defaultLocation;
+    const bboxGps = getBboxCoordinates() ? bbox : defaultLocation;
 
     // set map bounds to a continent
     map.fitBounds(bboxGps);
