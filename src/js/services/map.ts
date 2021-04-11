@@ -9,7 +9,7 @@ import {
 import { NORWAY } from '../config/countries';
 
 export default function MapBoxService() {
-  // Init MapBox Service.
+
   mapboxgl.accessToken = MAPBOX_TOKEN;
 
   const map = new mapboxgl.Map({
@@ -22,10 +22,21 @@ export default function MapBoxService() {
   // https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2/
   // this code is code version of https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1/
   map.on('load', () => {
+
+    /*
+     * This function does reverse geocoding on a string input. user searches
+     * USE, Germany etc & the GEOCODING API will return an object that has
+     * 4 GPS coordinates. 
+     *
+     * The GPS coords are then passed to the map.fitBounds(bboxCoordinates.bbox) 
+     * function. The map will zoom to that location.
+     *
+     * by default the map loads up on NORWAY, this can be changed.
+     * */
     const defaultLocation = NORWAY;
     const searchForm = document.querySelector('#searchBar');
     
-    const bboxCoordinates = (e: IbboxGps) => {
+    const bboxCoordinates = () => {
       searchForm.addEventListener('submit', async (e: any): Promise<IbboxGps> => {
         e.preventDefault();
         const [searchInput] = e.currentTarget;
@@ -111,6 +122,9 @@ export default function MapBoxService() {
         return displayFeat;
       });
 
+      /*
+       * Renders the white box on top right of screen
+       * */
       if (features.length > 0) {
         document.getElementById(
           'ui-info-box'
