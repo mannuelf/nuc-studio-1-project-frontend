@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { getPopulationLevelsData, getGrossGdpData } from './factbook-explorer-api';
 import mapboxgl from 'mapbox-gl';
+import { getPopulationLevelsData, getGrossGdpData } from '../models/factbook-explorer-api';
+import { NORWAY as polyShapeNorway } from '../config/countries';
 import {
   MAPBOX_TOKEN,
   MAPBOX_STYLE_URI,
   ENDPOINT_GEOCODING,
 } from '../config/constants';
-import { NORWAY as polyShapeNorway } from '../config/countries';
 
 export default async function MapBoxService() {
   /**
@@ -14,8 +14,6 @@ export default async function MapBoxService() {
     * **/
   const getPopulationLevels = await getPopulationLevelsData();
   const getGrossGdp = await getGrossGdpData();
-  console.log("getPopulationLevels", getPopulationLevels);
-  console.log("getGrossGdp", getGrossGdp);
 
   mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -26,7 +24,7 @@ export default async function MapBoxService() {
     center: [0.0, 0.0],
   });
 
-  map.on('load', () => {
+  map.on('load', async () => {
     /* *
      * https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1
      * https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2
@@ -40,31 +38,40 @@ export default async function MapBoxService() {
      *
      * by default the map loads up on NORWAY, this can be changed.
      * */
-    // make a pointer cursor
-    const defaultLocation = [4.40079698619525,57.906609500058,31.2678854952283,71.2176742998415];
-    const searchForm = document.querySelector('#searchBar');
-    let bbox = [];
 
+    // make a pointer cursor
+    map.getCanvas().style.cursor = 'default';
+    
+    const defaultLocation = [
+      4.40079698619525, 57.906609500058,
+      31.2678854952283,71.2176742998415
+    ]; // default location set to Norway, we should use GEOLOCATION API to automate this
+
+    let bbox = [];
     const getBboxCoordinates = () => {
+      const searchForm = document.querySelector('#searchBar');
+      
       searchForm.addEventListener('submit', async (e: any): Promise<IbboxGps> => {
         e.preventDefault();
         const [searchInput] = e.currentTarget;
         const userInput = searchInput.value.toLowerCase().replace('', '_');
-        const response = await axios.get(`${ENDPOINT_GEOCODING}/${userInput}.json?limit=2&access_token=${MAPBOX_TOKEN}`); // api call to mapbox
+        
+        const response = await axios.get(`
+          ${ENDPOINT_GEOCODING}/${userInput}.json?limit=2&access_token=${MAPBOX_TOKEN}
+        `); // api call to mapbox
+
         const [bboxCoordinates] = response.data.features; // get pgs coord out of api
+      
+        bbox = bboxCoordinates.bbox; // assign new coordinates into bbox
         map.fitBounds(bboxCoordinates.bbox); // set the map with user searched locatio
         searchInput.value = ''; // clear the input text
-        bbox = bboxCoordinates.bbox;
         return bboxCoordinates.bbox;
       }
     }
 
-    map.getCanvas().style.cursor = 'default';
-
-    const bboxGps = getBboxCoordinates() ? bbox : defaultLocation;
-
-    // set map bounds to a continent
-    map.fitBounds(bboxGps);
+    bbox = getBboxCoordinates(); // call search form, on enter capture
+    const bboxGps = bbox ? bbox : defaultLocation; // pass default GPS so map loads with something even if user has not searched.
+    map.fitBounds(bboxGps);  // set map bounds to a continent
 
     // define layer names
     const layers = [
@@ -153,6 +160,8 @@ export default async function MapBoxService() {
 
     /**
      * Draw Polygon around country borders
+     * We will have to do this for ever country using https://geojson.io/,
+     * Mapbox does have an API to automate this, but it costs money.
      **/
     // Add a data source containing GeoJSON data.
     map.addSource('Norway', {
@@ -161,8 +170,7 @@ export default async function MapBoxService() {
         type: 'Feature',
         geometry: {
           type: 'Polygon',
-          // These coordinates outline Norway.
-          'coordinates': [polyShapeNorway]
+          'coordinates': [polyShapeNorway] // These coordinates outline Norway.
         },
       },
     });
@@ -178,6 +186,7 @@ export default async function MapBoxService() {
         'fill-opacity': 0.3,
       },
     });
+
     // Add a black outline around the polygon.
     map.addLayer({
       id: 'outline',
@@ -189,5 +198,6 @@ export default async function MapBoxService() {
         'line-width': 2,
       },
     });
+
   });
 }
