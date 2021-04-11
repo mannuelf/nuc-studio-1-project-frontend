@@ -1,103 +1,103 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<title>FactBook Explorers</title>
-		<meta
-			name="viewport"
-			content="initial-scale=1,maximum-scale=1,user-scalable=no"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-			integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-			crossorigin=""
-		/>
-		<link
-			href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css"
-			rel="stylesheet"
-		/>
-		<link rel="stylesheet" href="../node_modules/bulma/css/bulma.min.css" />
-		<link rel="stylesheet" href="../node_modules/animate.css/animate.min.css" />
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-			integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-			crossorigin="anonymous"
-		/>
-		<link rel="stylesheet" href="./css/styles.css" />
-	</head>
-	<body>
-		<nav
-			class="navbar is-fixed-bottom animate__animated"
-			role="navigation"
-			aria-label="main navigation"
-		>
-			<div class="navbar-brand">
-				<a class="navbar-item ui-fbe-logo" href="./">
-					<span width="112" height="28"
-						><strong>FactBook</strong> <br />
-						Explorers</span
-					>
-				</a>
+  <head>
+    <meta charset="utf-8" />
+    <title>FactBook Explorers</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../node_modules/bulma/css/bulma.min.css" />
+    <link rel="stylesheet" href="../node_modules/animate.css/animate.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <nav
+      class="navbar is-fixed-bottom animate__animated"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div class="navbar-brand">
+        <a class="navbar-item ui-fbe-logo" href="./">
+          <span width="112" height="28"
+            ><strong>FactBook</strong> <br />
+            Explorers</span
+          >
+        </a>
 
-				<form id="searchBar" class="mt-3 ml-2 field has-addons">
-					<div class="control">
-						<label for="search" class="is-sr-only">Search for country</label>
-						<input class="input" type="search" placeholder="Enter country" />
-					</div>
-					<div class="control">
-						<button class="button is-normal">
-							<span class="icon">
-								<i class="fas fa-search"></i>
-							</span>
-						</button>
-					</div>
-				</form>
+        <form id="searchBar" class="mt-3 ml-2 field has-addons">
+          <div class="control">
+            <label for="search" class="is-sr-only">Search for country</label>
+            <input class="input" type="search" placeholder="Enter country" />
+          </div>
+          <div class="control">
+            <button class="button is-normal">
+              <span class="icon">
+                <i class="fas fa-search"></i>
+              </span>
+            </button>
+          </div>
+        </form>
 
-				<a
-					role="button"
-					class="navbar-burger"
-					aria-label="menu"
-					aria-expanded="false"
-					data-target="navbarBasicExample"
-				>
-					<span aria-hidden="true"></span>
-					<span aria-hidden="true"></span>
-					<span aria-hidden="true"></span>
-				</a>
-			</div>
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
 
-			<div id="navbarBasicExample" class="navbar-menu">
-				<div class="navbar-start">
-					<a class="navbar-item">Documentation</a>
-					<div class="navbar-item">
-						<small>| Search by Country. Only country is supported today.</small>
-					</div>
-				</div>
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item">Documentation</a>
+          <div class="navbar-item">
+            <small>| Search by Country. Only country is supported today.</small>
+          </div>
+        </div>
 
-				<div class="navbar-end">
-					<div class="navbar-item">
-						<div class="buttons">
-							<a class="button is-primary">
-								<strong>Sign up</strong>
-							</a>
-							<a class="button is-light"> Log in </a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</nav>
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-primary">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-light"> Log in </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-		<div class="ui-map-section">
-			<div id="map"></div>
-			<div class="map-overlay" id="features">
-				<div id="ui-info-box"><p>Search & hover over a country</p></div>
-				<div id="ui-all-features"></div>
-			</div>
-			<div class="map-overlay" id="legend"></div>
-		</div>
+    <div class="ui-map-section">
+      <div id="map"></div>
+      <div class="map-overlay" id="features">
+        <div id="ui-info-box"><p>Search & hover over a country</p></div>
+        <div id="ui-all-features"></div>
+      </div>
+      <div class="map-overlay" id="legend"></div>
+    </div>
 
-		<script src="./js/app.ts"></script>
-	</body>
+    <script src="./js/app.ts"></script>
+  </body>
 </html>
