@@ -1,28 +1,32 @@
 import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
-import { getPopulationLevelsData, getGrossGdpData } from '../models/factbook-explorer-api';
-import { NORWAY as polyShapeNorway } from '../config/countries';
 import {
-  MAPBOX_TOKEN,
-  MAPBOX_STYLE_URI,
-  ENDPOINT_GEOCODING,
-} from '../config/constants';
+  getPopulationLevelsData,
+  getGrossGdpData,
+} from '../models/factbook-explorer-api';
+import { searchBar } from '../utils/searchBar';
+import { NORWAY as polyShapeNorway } from '../config/countries';
+import { MAPBOX_TOKEN, MAPBOX_STYLE_URI } from '../config/constants';
+
+mapboxgl.accessToken = MAPBOX_TOKEN;
+
+// new up an instance of MapBox map and export it for other modules to use.
+export const map = new mapboxgl.Map({
+  container: 'map',
+  style: MAPBOX_STYLE_URI,
+  zoom: 0,
+  center: [0.0, 0.0],
+});
+
+// Call to searchBar function, enable search for user, must hit enter key.
+searchBar();
 
 export default async function MapBoxService() {
-  /**
-    * GET data from our API
-    * **/
+  /*
+   * GET data from our API service on Heroku
+   * */
   const getPopulationLevels = await getPopulationLevelsData();
   const getGrossGdp = await getGrossGdpData();
-
-  mapboxgl.accessToken = MAPBOX_TOKEN;
-
-  const map = new mapboxgl.Map({
-    container: 'map',
-    style: MAPBOX_STYLE_URI,
-    zoom: 0,
-    center: [0.0, 0.0],
-  });
 
   map.on('load', async () => {
     /* *
@@ -41,37 +45,16 @@ export default async function MapBoxService() {
 
     // make a pointer cursor
     map.getCanvas().style.cursor = 'default';
-    
+
     const defaultLocation = [
-      4.40079698619525, 57.906609500058,
-      31.2678854952283,71.2176742998415
+      4.40079698619525,
+      57.906609500058,
+      31.2678854952283,
+      71.2176742998415,
     ]; // default location set to Norway, we should use GEOLOCATION API to automate this
 
-    let bbox = [];
-    const getBboxCoordinates = () => {
-      const searchForm = document.querySelector('#searchBar');
-      
-      searchForm.addEventListener('submit', async (e: any): Promise<IbboxGps> => {
-        e.preventDefault();
-        const [searchInput] = e.currentTarget;
-        const userInput = searchInput.value.toLowerCase().replace('', '_');
-        
-        const response = await axios.get(`
-          ${ENDPOINT_GEOCODING}/${userInput}.json?limit=2&access_token=${MAPBOX_TOKEN}
-        `); // api call to mapbox
-
-        const [bboxCoordinates] = response.data.features; // get pgs coord out of api
-      
-        bbox = bboxCoordinates.bbox; // assign new coordinates into bbox
-        map.fitBounds(bboxCoordinates.bbox); // set the map with user searched locatio
-        searchInput.value = ''; // clear the input text
-        return bboxCoordinates.bbox;
-      }
-    }
-
-    bbox = getBboxCoordinates(); // call search form, on enter capture
-    const bboxGps = bbox ? bbox : defaultLocation; // pass default GPS so map loads with something even if user has not searched.
-    map.fitBounds(bboxGps);  // set map bounds to a continent
+    // pass default GPS so map loads with something even if user has not searched.
+    map.fitBounds(defaultLocation); // set map bounds to a continent
 
     // define layer names
     const layers = [
@@ -170,7 +153,7 @@ export default async function MapBoxService() {
         type: 'Feature',
         geometry: {
           type: 'Polygon',
-          'coordinates': [polyShapeNorway] // These coordinates outline Norway.
+          coordinates: [polyShapeNorway], // These coordinates outline Norway.
         },
       },
     });
@@ -198,6 +181,5 @@ export default async function MapBoxService() {
         'line-width': 2,
       },
     });
-
   });
 }
