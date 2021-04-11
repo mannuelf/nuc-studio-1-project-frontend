@@ -1,5 +1,5 @@
 import axios from 'axios';
-import FactBookExplorerApi from './factbook-explorer-api';
+import { getPopulationLevelsData, getGrossGdpData } from './factbook-explorer-api';
 import mapboxgl from 'mapbox-gl';
 import {
   MAPBOX_TOKEN,
@@ -8,7 +8,15 @@ import {
 } from '../config/constants';
 import { NORWAY as polyShapeNorway } from '../config/countries';
 
-export default function MapBoxService() {
+export default async function MapBoxService() {
+  /**
+    * GET data from our API
+    * **/
+  const getPopulationLevels = await getPopulationLevelsData();
+  const getGrossGdp = await getGrossGdpData();
+  console.log("getPopulationLevels", getPopulationLevels);
+  console.log("getGrossGdp", getGrossGdp);
+
   mapboxgl.accessToken = MAPBOX_TOKEN;
 
   const map = new mapboxgl.Map({
