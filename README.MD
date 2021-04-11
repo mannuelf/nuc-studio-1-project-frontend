@@ -48,3 +48,25 @@ We want to write with modern ES6 JavaScript with imports & exports + TypeScript.
 Just write normal JavaScript in the TypeScript file, valid JavaScript is valid TypeScript.
 
 Parcel will compile your the modern JS into ES5 for older browser support.
+
+# Mapbox
+
+Mapbox is awesome, their api is well documented and easy to code around. However it has some limitations on the FREE version, which is what we are using. Due to this we have to manually map and draw polygon data.
+
+## GeoJSON polygon
+
+[https://geojson.io/](https://geojson.io/)
+
+Manuall draw polygon shapes around country using www.geojson.io.
+
+[https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/](https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/)
+
+## Point-in-polygon query with boundaries
+
+[https://docs.mapbox.com/help/tutorials/point-in-polygon-query-with-mapbox-boundaries/](https://docs.mapbox.com/help/tutorials/point-in-polygon-query-with-mapbox-boundaries/)
+
+## Choropleth map
+
+[https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2/](https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2/)
+
+Have built an adaptation of a choropleth map, instead of using MapBox data, we use our own data from our own service via JSON API.
