@@ -6,34 +6,34 @@ import {
   MAPBOX_STYLE_URI,
   ENDPOINT_GEOCODING,
 } from '../config/constants';
-import { NORWAY } from '../config/countries';
+import { NORWAY as polyShapeNorway } from '../config/countries';
 
 export default function MapBoxService() {
-
   mapboxgl.accessToken = MAPBOX_TOKEN;
 
   const map = new mapboxgl.Map({
     container: 'map',
     style: MAPBOX_STYLE_URI,
     zoom: 0,
-    center: [-70.50, 40.50]
+    center: [0.0, 0.0],
   });
 
-  // https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2/
-  // this code is code version of https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1/
   map.on('load', () => {
-
-    /*
+    /* *
+     * https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1
+     * https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2
+     *
      * This function does reverse geocoding on a string input. user searches
      * USE, Germany etc & the GEOCODING API will return an object that has
-     * 4 GPS coordinates. 
+     * 4 GPS coordinates.
      *
-     * The GPS coords are then passed to the map.fitBounds(bboxCoordinates.bbox) 
+     * The GPS coords are then passed to the map.fitBounds(bboxCoordinates.bbox)
      * function. The map will zoom to that location.
      *
      * by default the map loads up on NORWAY, this can be changed.
      * */
-    const defaultLocation = NORWAY;
+    // make a pointer cursor
+    const defaultLocation = [4.40079698619525,57.906609500058,31.2678854952283,71.2176742998415];
     const searchForm = document.querySelector('#searchBar');
     let bbox = [];
 
@@ -51,7 +51,6 @@ export default function MapBoxService() {
       }
     }
 
-    // make a pointer cursor
     map.getCanvas().style.cursor = 'default';
 
     const bboxGps = getBboxCoordinates() ? bbox : defaultLocation;
@@ -136,6 +135,51 @@ export default function MapBoxService() {
         document.getElementById('ui-info-box').innerHTML =
           '<p>Hover over a state!</p>';
       }
+
+      /*document.getElementById('ui-all-features').innerHTML = JSON.stringify(
+        displayFeatures, 
+        null,
+        2
+      );*/
+    });
+
+    /**
+     * Draw Polygon around country borders
+     **/
+    // Add a data source containing GeoJSON data.
+    map.addSource('Norway', {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          // These coordinates outline Norway.
+          'coordinates': [polyShapeNorway]
+        },
+      },
+    });
+
+    // Add a new layer to visualize the polygon.
+    map.addLayer({
+      id: 'Norway',
+      type: 'fill',
+      source: 'Norway', // reference the data source
+      layout: {},
+      paint: {
+        'fill-color': '#2a9d8f', // color for fill
+        'fill-opacity': 0.3,
+      },
+    });
+    // Add a black outline around the polygon.
+    map.addLayer({
+      id: 'outline',
+      type: 'line',
+      source: 'Norway',
+      layout: {},
+      paint: {
+        'line-color': '#F66990',
+        'line-width': 2,
+      },
     });
   });
 }
