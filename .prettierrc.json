@@ -1,7 +1,7 @@
 {
 	"$schema": "http://json.schemastore.org/prettierrc",
 	"endOfLine": "lf",
-	"useTabs": true,
+	"useTabs": false,
 	"arrowParens": "always",
 	"quoteProps": "as-needed",
 	"bracketSpacing": true,

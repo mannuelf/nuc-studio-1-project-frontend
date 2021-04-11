@@ -1,4 +1,4 @@
-import { setNavBar } from './components/setNavBar';
+mport { setNavBar } from './components/setNavBar';
 import MapBoxService from './services/map';
 
 window.addEventListener('DOMContentLoaded', () => {
