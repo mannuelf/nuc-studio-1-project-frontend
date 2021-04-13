@@ -4,6 +4,8 @@
  * because MapBox API for country.boundaries costs a bit of money,
  * so for now this will do.
  */
+export const AUSTRALIA: [number, number] = [];
+
 export const NORWAY: [number, number] = [
   [30.937499999999996, 69.7485511291223],
   [30.322265625000004, 69.85476220252646],

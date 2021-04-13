@@ -1,15 +1,10 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
-  "extends": ["airbnb-base"],
   "parser": "@typescript-eslint/parser",
+  "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended"],
   "parserOptions": {
-    "ecmaVersion": 12,
+    "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
   "rules": {
     "import/extensions": "off"
   },
@@ -19,5 +14,10 @@
         "extensions": [".ts"]
       }
     }
-  }
+  },
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "plugins": ["@typescript-eslint"]
 }

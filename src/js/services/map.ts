@@ -1,4 +1,3 @@
-import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
 import {
   getPopulationLevelsData,
@@ -21,12 +20,16 @@ export const map = new mapboxgl.Map({
 // Call to searchBar function, enable search for user, must hit enter key.
 searchBar();
 
-export default async function MapBoxService() {
+export default async function MapBoxService(): Promise<void> {
   /*
    * GET data from our API service on Heroku
    * */
   const getPopulationLevels = await getPopulationLevelsData();
   const getGrossGdp = await getGrossGdpData();
+
+  // use API calls
+  getPopulationLevels();
+  getGrossGdp();
 
   map.on('load', async () => {
     /* *
@@ -80,17 +83,17 @@ export default async function MapBoxService() {
     ];
 
     // create legend
-    let legend = document.querySelector('#legend');
+    const legend = document.querySelector('#legend');
 
-    for (let i = 0; i < layers.length; i++) {
-      let layer = layers[i];
-      let color = colors[i];
-      let item = document.createElement('div');
-      let key = document.createElement('span');
+    for (let i = 0; i < layers.length; i += 1) {
+      const layer = layers[i];
+      const color = colors[i];
+      const item = document.createElement('div');
+      const key = document.createElement('span');
       key.className = 'legend-key';
       key.style.backgroundColor = color;
 
-      let value = document.createElement('span');
+      const value = document.createElement('span');
       value.innerHTML = layer;
       item.appendChild(key);
       item.appendChild(value);
@@ -98,7 +101,8 @@ export default async function MapBoxService() {
     }
 
     // change info window on hover
-    map.on('mousemove', function (e) {
+    map.on('mousemove', (e) => {
+      const country = e.target;
       const features = map.queryRenderedFeatures();
 
       const displayProperties = [
@@ -113,7 +117,7 @@ export default async function MapBoxService() {
 
       // https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures/
       const displayFeatures = features.map((feat) => {
-        let displayFeat = {};
+        const displayFeat = {};
 
         displayProperties.forEach((prop) => {
           displayFeat[prop] = feat[prop];
@@ -124,28 +128,30 @@ export default async function MapBoxService() {
       /*
        * Renders the white box on top right of screen
        * */
+      const infoBox = document.querySelector('ui-info-box') as HTMLElement;
       if (features.length > 0) {
-        document.getElementById(
-          'ui-info-box'
-        ).innerHTML = `<h3>${features[0].properties.name}</h3>
-        <p><strong>${features[0].properties.density}</strong> people per square mile</p>`;
+        infoBox.innerHTML = `<h3>${
+          features[0] ? features[0].properties.name : ''
+        }</h3>
+          <p><strong>${features[0] ? features[0].density : ''}</strong> 
+          people living in the country.</p>
+        `;
       } else {
-        document.getElementById('ui-info-box').innerHTML =
-          '<p>Hover over a state!</p>';
+        infoBox.innerHTML = '<p>Hover over a country!</p>';
       }
 
-      /*document.getElementById('ui-all-features').innerHTML = JSON.stringify(
-        displayFeatures, 
+      document.getElementById('ui-all-features').innerHTML = JSON.stringify(
+        displayFeatures,
         null,
-        2
-      );*/
+        2,
+      );
     });
 
-    /**
+    /*
      * Draw Polygon around country borders
      * We will have to do this for ever country using https://geojson.io/,
      * Mapbox does have an API to automate this, but it costs money.
-     **/
+     */
     // Add a data source containing GeoJSON data.
     map.addSource('Norway', {
       type: 'geojson',
