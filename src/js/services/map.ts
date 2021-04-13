@@ -130,23 +130,25 @@ export default async function MapBoxService(): Promise<void> {
       /*
        * Renders the white box on top right of screen
        * */
+      const uiAllFeatures = document.getElementById(
+        'ui-all-features'
+      ) as HTMLElement;
       const infoBox = document.getElementById('ui-info-box') as HTMLElement;
+
+      // if there is data inster the data into the HTML container.
       if (features.length > 0) {
         infoBox.innerHTML = `<h3>${
           features[0] ? features[0].properties.name : ''
         }</h3>
-          <p><strong>${features[0] ? features[0].density : ''}</strong> 
-          people living in the country.</p>
+          <p><strong>${features[0] ? features[0].density : ''}</strong>
+            people living in the country.</p>
         `;
       } else {
         infoBox.innerHTML = '<p>Hover over a country!</p>';
       }
 
-      document.getElementById('.ui-all-features').innerHTML = JSON.stringify(
-        displayFeatures,
-        null,
-        2
-      );
+      // displays all data from mapbox on the ui, shows whats available to us.
+      uiAllFeatures.innerHTML = JSON.stringify(displayFeatures, null, 2);
     });
 
     /*
@@ -155,6 +157,9 @@ export default async function MapBoxService(): Promise<void> {
      * Mapbox does have an API to automate this, but it costs money.
      */
     // Add a data source containing GeoJSON data.
+    /*
+     * Norway
+     * */
     map.addSource('Norway', {
       type: 'geojson',
       data: {
@@ -189,5 +194,9 @@ export default async function MapBoxService(): Promise<void> {
         'line-width': 2,
       },
     });
+  });
+
+  map.on('click', 'poi-label', (e) => {
+    console.log('A click happened:', e.lngLat);
   });
 }
