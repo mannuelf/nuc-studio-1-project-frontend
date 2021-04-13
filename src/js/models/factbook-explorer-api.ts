@@ -24,11 +24,54 @@ interface IYears {
   '2012': number;
   '2013': number;
   '2014': number;
+  country: string;
+  id: number;
 }
 
 interface IData {
   data: {
     australia: IYears;
+    austria: IYears;
+    belgium: IYears;
+    brazil: IYears;
+    canada: IYears;
+    chile: IYears;
+    china: IYears;
+    'check-republic': IYears;
+    denmark: IYears;
+    estonia: IYears;
+    'eu-28': IYears;
+    finland: IYears;
+    france: IYears;
+    germany: IYears;
+    greece: IYears;
+    hungary: IYears;
+    iceland: IYears;
+    india: IYears;
+    indonesia: IYears;
+    ireland: IYears;
+    israel: IYears;
+    italy: IYears;
+    japan: IYears;
+    korea: IYears;
+    luxembourg: IYears;
+    mexico: IYears;
+    netherlands: IYears;
+    zealand: IYears;
+    norway: IYears;
+    oecd: IYears;
+    poland: IYears;
+    portugal: IYears;
+    'russian-federation': IYears;
+    'slovak-republic': IYears;
+    slovenia: IYears;
+    'south-africa': IYears;
+    spain: IYears;
+    sweden: IYears;
+    switzerland: IYears;
+    turkey: IYears;
+    'united-kingdom': IYears;
+    'united-states': IYears;
   };
 }
 

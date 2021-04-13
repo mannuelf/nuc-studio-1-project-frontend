@@ -6,7 +6,7 @@ import {
 
 import { searchBar } from '../utils/searchBar';
 import { NORWAY as polyShapeNorway } from '../config/countries';
-import { MAPBOX_STYLE_URI, MAPBOX_TOKEN } from '../config/constants';
+import { ABOUT_MESSAGE, MAPBOX_STYLE_URI, MAPBOX_TOKEN } from '../config/constants';
 import { renderNorway } from './map-ui-norway';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -23,6 +23,42 @@ export const map = new mapboxgl.Map({
 searchBar();
 
 export default async function MapBoxService(): Promise<void> {
+  const uiAllFeatures = document.getElementById('ui-all-features') as HTMLElement;
+  const infoBox = document.getElementById('ui-info-box') as HTMLElement;
+
+  const defaultLocation = [
+    4.40079698619525,
+    57.906609500058,
+    31.2678854952283,
+    71.2176742998415,
+  ]; // default location set to Norway, we should use GEOLOCATION API to automate this
+
+  // define layer names
+  const layers = [
+    '0-10',
+    '10-20',
+    '20-50',
+    '50-100',
+    '100-200',
+    '200-500',
+    '500-1000',
+    '1000+',
+  ];
+
+  const colors = [
+    '#FFEDA0',
+    '#FED976',
+    '#FEB24C',
+    '#FD8D3C',
+    '#FC4E2A',
+    '#E31A1C',
+    '#BD0026',
+    '#800026',
+  ];
+
+  // create legend
+  const legend = document.querySelector('#legend');
+
   map.on('load', async () => {
     /* *
      * https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1
@@ -41,41 +77,9 @@ export default async function MapBoxService(): Promise<void> {
     // make a pointer cursor
     map.getCanvas().style.cursor = 'default';
 
-    const defaultLocation = [
-      4.40079698619525,
-      57.906609500058,
-      31.2678854952283,
-      71.2176742998415,
-    ]; // default location set to Norway, we should use GEOLOCATION API to automate this
-
     // pass default GPS so map loads with something even if user has not searched.
-    map.fitBounds(defaultLocation); // set map bounds to a continent
-
-    // define layer names
-    const layers = [
-      '0-10',
-      '10-20',
-      '20-50',
-      '50-100',
-      '100-200',
-      '200-500',
-      '500-1000',
-      '1000+',
-    ];
-
-    const colors = [
-      '#FFEDA0',
-      '#FED976',
-      '#FEB24C',
-      '#FD8D3C',
-      '#FC4E2A',
-      '#E31A1C',
-      '#BD0026',
-      '#800026',
-    ];
-
-    // create legend
-    const legend = document.querySelector('#legend');
+    // set map bounds to a continent
+    map.fitBounds(defaultLocation);
 
     for (let i = 0; i < layers.length; i += 1) {
       const layer = layers[i];
@@ -91,7 +95,7 @@ export default async function MapBoxService(): Promise<void> {
       item.appendChild(value);
       legend.appendChild(item);
     }
-
+ 
     /*
      * Draw Polygon around country borders
      * We will have to do this for ever country using https://geojson.io/,
@@ -107,72 +111,9 @@ export default async function MapBoxService(): Promise<void> {
       return data.norway;
     };
 
-    map.addSource('Norway', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Polygon',
-              coordinates: [polyShapeNorway], // These coordinates outline Norway.
-            },
-            properties: {
-              description: await renderPopulationLevels(), // APi call to python backend
-            },
-          },
-        ],
-      },
-    });
-
-    // Add a new layer to visualize the polygon.
-    map.addLayer({
-      id: 'Norway',
-      type: 'fill',
-      source: 'Norway', // reference the data source
-      layout: {},
-      paint: {
-        'fill-color': '#2a9d8f', // color for fill
-        'fill-opacity': 0.3,
-      },
-    });
-
-    // Add a black outline around the polygon.
-    map.addLayer({
-      id: 'outline',
-      type: 'line',
-      source: 'Norway',
-      layout: {},
-      paint: {
-        'line-color': '#F66990',
-        'line-width': 2,
-      },
-    });
-
-    // change info window on hover
-    map.on('mousemove', async () => {
-      const features = map.queryRenderedFeatures();
-      /*
-       * Renders the white box on top right of screen
-       * */
-      const uiAllFeatures = document.getElementById(
-        'ui-all-features',
-      ) as HTMLElement;
-      const infoBox = document.getElementById('ui-info-box') as HTMLElement;
-
-      // if there is data inster the data into the HTML container.
-      if (features.length > 0) {
-        console.log('🚀', features[0]);
-        infoBox.innerHTML = `<h3>${
-          features[0] ? features[0].properties.name : ''
-        }</h3>
-          <p><strong>${features[0] ? features[0].density : ''}</strong>
-            people living in the country.</p>
-        `;
-      } else {
-        infoBox.innerHTML = '<p>Hover over a country!</p>';
-      }
+    // change info window on click
+    map.on('click', async (e) => {
+      const features = map.queryRenderedFeatures(e.point);
 
       const displayProperties = [
         'type',
@@ -180,23 +121,80 @@ export default async function MapBoxService(): Promise<void> {
         'id',
         'layer',
         'source',
-        'sourceLayer',
-        'state',
       ];
+      
+      console.log("FEATURES:", features);
 
-      // https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures/
-      const displayFeatures = features.map((feat) => {
-        const displayFeat = {};
+      features.map(async (feat) => {
+        const countryName = feat.properties?.name_en.toLowerCase();
+        console.log("countryName", countryName)
+        const renderPopulationLevels = async () => {
+          const { data } = await getPopulationLevelsData();
+          console.log("renderPopulationLevels", data.countryName)
+          return data.countryName;
+        };
 
-        displayProperties.forEach((prop) => {
-          displayFeat[prop] = feat[prop];
+        map.addSource(feat.properties.name_en.toUpperCase(), {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                geometry: {
+                  type: 'Polygon',
+                  coordinates: [polyShapeNorway], // These coordinates outline Norway.
+                },
+                properties: {
+                  description: ABOUT_MESSAGE,
+                  data: await renderPopulationLevels();
+                },
+              },
+            ],
+          },
         });
-        console.log('🍏', displayFeat);
-        return displayFeat;
+
+        // Add a new layer to visualize the polygon.
+        map.addLayer({
+          id: feat.id,
+          type: 'fill',
+          source: feat.source, // reference the data source
+          layout: {},
+          paint: {
+            'fill-color': '#2a9d8f', // color for fill
+            'fill-opacity': 0.3,
+          },
+        });
+
+        // Add an outline around the polygon.
+        map.addLayer({
+          id: 'outline',
+          type: 'line',
+          source: feat.source,
+          layout: {},
+          paint: {
+            'line-color': '#F66990',
+            'line-width': 3,
+          },
+        });
+
+        console.log('>>', feat)
       });
 
-      // displays all data from mapbox on the ui, shows whats available to us.
-      // uiAllFeatures.innerHTML = JSON.stringify(displayFeatures, null, 2);
+      const renderCountryDescription = (props) => {
+        console.log('🚀', props);
+        infoBox.innerHTML = `
+          <h1 class="is-size-3 has-text-semibold">
+            ${props ? props.layer.source : '' }
+          </h1>
+          <p class="is-size-6">
+            ${props ? props.properties.description : ''}
+          </p>`;
+      }
+
+      const [selectedCountry,] = features;
+      renderCountryDescription(selectedCountry);
+      // https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures/
     });
   });
 }
