@@ -75,21 +75,34 @@ interface IData {
   };
 }
 
-export const getPopulationLevelsData = async (): Promise<IData> => {
+export const getPopulationLevelsData = async (country): Promise<IData> => {
   try {
     const result = await axios.get(`${API_BASE_URL}/population-levels`);
     const { data } = result;
-    return { data };
+    const allData = data[0];
+    Object.keys(allData)
+      .filter((key) => key.includes(country))
+      .reduce((obj, key) => {
+        obj[key] = allData[key];
+        return obj;
+      }, {});
+    });
   } catch (error) {
     throw new Error(error);
   }
 };
 
-export const getGrossGdpData = async (): Promise<IData> => {
+export const getGrossGdpData = async (country): Promise<IData> => {
   try {
     const result = await axios.get(`${API_BASE_URL}/gross-gdp`);
     const { data } = result;
-    return { data };
+    const allData = data[0];
+    Object.keys(allData)
+      .filter((key) => key.includes(country))
+      .reduce((obj, key) => {
+        obj[key] = allData[key];
+        return obj;
+      }, {});
   } catch (error) {
     throw new Error(error);
   }

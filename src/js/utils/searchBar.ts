@@ -6,7 +6,7 @@ import { map } from '../services/map';
 interface Ibbox {
   bbox: [number, number, number, number];
 }
-
+export let bBoxCoords = [];
 export const searchBar = async (): Promise<Ibbox> => {
   const searchForm = document.querySelector('#searchBar') as HTMLFormElement;
 
@@ -20,6 +20,7 @@ export const searchBar = async (): Promise<Ibbox> => {
     `); // api call to mapbox
     const [bboxCoordinates] = response.data.features; // get pgs coord out of api
     bbox = bboxCoordinates.bbox; // assign new coordinates into bbox
+    bBoxCoords = bboxCoordinates.bbox;
     map.fitBounds(bbox); // set the map with user searched location
     searchInput.value = ''; // clear the input text
   

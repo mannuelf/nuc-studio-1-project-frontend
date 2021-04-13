@@ -4,10 +4,14 @@ import {
   getPopulationLevelsData,
 } from '../models/factbook-explorer-api';
 
-import { searchBar } from '../utils/searchBar';
+import { bBoxCoords, searchBar } from '../utils/searchBar';
 import { NORWAY as polyShapeNorway } from '../config/countries';
-import { ABOUT_MESSAGE, MAPBOX_STYLE_URI, MAPBOX_TOKEN } from '../config/constants';
-import { renderNorway } from './map-ui-norway';
+import {
+  ABOUT_MESSAGE,
+  MAPBOX_STYLE_URI,
+  MAPBOX_TOKEN,
+} from '../config/constants';
+import getBboxCoordinates from '../utils/getBboxCoordinates';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -23,7 +27,9 @@ export const map = new mapboxgl.Map({
 searchBar();
 
 export default async function MapBoxService(): Promise<void> {
-  const uiAllFeatures = document.getElementById('ui-all-features') as HTMLElement;
+  const uiAllFeatures = document.getElementById(
+    'ui-all-features'
+  ) as HTMLElement;
   const infoBox = document.getElementById('ui-info-box') as HTMLElement;
 
   const defaultLocation = [
@@ -95,46 +101,41 @@ export default async function MapBoxService(): Promise<void> {
       item.appendChild(value);
       legend.appendChild(item);
     }
- 
-    /*
-     * Draw Polygon around country borders
-     * We will have to do this for ever country using https://geojson.io/,
-     * Mapbox does have an API to automate this, but it costs money.
-     *
-     * GET data from our API service on Heroku
-     * const getPopulationLevels = await getPopulationLevelsData();
-     * const getGrossGdp = await getGrossGdpData();
-     * use API calls
-     * */
-    const renderPopulationLevels = async () => {
-      const { data } = await getPopulationLevelsData();
-      return data.norway;
-    };
 
     // change info window on click
     map.on('click', async (e) => {
       const features = map.queryRenderedFeatures(e.point);
+      const displayProperties = ['type', 'properties', 'id', 'layer', 'source'];
 
-      const displayProperties = [
-        'type',
-        'properties',
-        'id',
-        'layer',
-        'source',
-      ];
-      
-      console.log("FEATURES:", features);
+      // https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures/
+      const displayFeatures = features.map((feat) => {
+        const displayFeat = {};
+        displayProperties.forEach((prop) => {
+          displayFeat[prop] = feat[prop];
+        });
+        return displayFeat;
+      });
 
-      features.map(async (feat) => {
-        const countryName = feat.properties?.name_en.toLowerCase();
-        console.log("countryName", countryName)
-        const renderPopulationLevels = async () => {
-          const { data } = await getPopulationLevelsData();
-          console.log("renderPopulationLevels", data.countryName)
-          return data.countryName;
-        };
+      const [selectedCountry] = displayFeatures;
+      const country = selectedCountry.properties.name_en.toLowerCase();
 
-        map.addSource(feat.properties.name_en.toUpperCase(), {
+      /*
+       * * Draw Polygon around country borders
+       * * We will have to do this for ever country using https://geojson.io/,
+       * * Mapbox does have an API to automate this, but it costs money.
+       * *
+       * * GET data from our API service on Heroku
+       * * const getPopulationLevels = await getPopulationLevelsData();
+       * * const getGrossGdp = await getGrossGdpData();
+       * * use API calls
+       * * */
+      const renderPopulationLevels = async () => {
+        const data = await getPopulationLevelsData(country);
+        return data;
+      };
+
+      // https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
+      map.addSource(country, {
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
@@ -143,11 +144,12 @@ export default async function MapBoxService(): Promise<void> {
                 type: 'Feature',
                 geometry: {
                   type: 'Polygon',
-                  coordinates: [polyShapeNorway], // These coordinates outline Norway.
+                  // These coordinates outline the country.
+                  coordinates: await getBboxCoordinates(country), 
                 },
                 properties: {
                   description: ABOUT_MESSAGE,
-                  data: await renderPopulationLevels();
+                  data: await renderPopulationLevels(country);
                 },
               },
             ],
@@ -156,9 +158,9 @@ export default async function MapBoxService(): Promise<void> {
 
         // Add a new layer to visualize the polygon.
         map.addLayer({
-          id: feat.id,
+          id: country,
           type: 'fill',
-          source: feat.source, // reference the data source
+          source: country, // reference the data source
           layout: {},
           paint: {
             'fill-color': '#2a9d8f', // color for fill
@@ -170,7 +172,7 @@ export default async function MapBoxService(): Promise<void> {
         map.addLayer({
           id: 'outline',
           type: 'line',
-          source: feat.source,
+          source: country,
           layout: {},
           paint: {
             'line-color': '#F66990',
@@ -178,23 +180,13 @@ export default async function MapBoxService(): Promise<void> {
           },
         });
 
-        console.log('>>', feat)
-      });
+      console.log(country, displayFeatures);
 
-      const renderCountryDescription = (props) => {
-        console.log('🚀', props);
-        infoBox.innerHTML = `
-          <h1 class="is-size-3 has-text-semibold">
-            ${props ? props.layer.source : '' }
-          </h1>
-          <p class="is-size-6">
-            ${props ? props.properties.description : ''}
-          </p>`;
-      }
-
-      const [selectedCountry,] = features;
-      renderCountryDescription(selectedCountry);
-      // https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures/
+      document.getElementById('features').innerHTML = JSON.stringify(
+        displayFeatures,
+        null,
+        2
+      );
     });
   });
 }

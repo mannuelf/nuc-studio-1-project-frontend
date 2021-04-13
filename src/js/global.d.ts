@@ -1,3 +1,3 @@
-export interface IbboxGps {
+export interface Ibbox {
   bbox: [number, number];
 }
