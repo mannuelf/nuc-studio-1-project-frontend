@@ -1,12 +1,12 @@
 import mapboxgl from 'mapbox-gl';
 import {
-  getPopulationLevelsData,
   getGrossGdpData,
+  getPopulationLevelsData,
 } from '../models/factbook-explorer-api';
 
 import { searchBar } from '../utils/searchBar';
 import { NORWAY as polyShapeNorway } from '../config/countries';
-import { MAPBOX_TOKEN, MAPBOX_STYLE_URI } from '../config/constants';
+import { MAPBOX_STYLE_URI, MAPBOX_TOKEN } from '../config/constants';
 import { renderNorway } from './map-ui-norway';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -92,71 +92,19 @@ export default async function MapBoxService(): Promise<void> {
       legend.appendChild(item);
     }
 
-    // change info window on hover
-    map.on('mousemove', () => {
-      const features = map.queryRenderedFeatures();
-
-      const displayProperties = [
-        'type',
-        'properties',
-        'id',
-        'layer',
-        'source',
-        'sourceLayer',
-        'state',
-      ];
-
-      // https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures/
-      const displayFeatures = features.map((feat) => {
-        const displayFeat = {};
-
-        displayProperties.forEach((prop) => {
-          displayFeat[prop] = feat[prop];
-        });
-        return displayFeat;
-      });
-
-      /*
-       * Renders the white box on top right of screen
-       * */
-      const uiAllFeatures = document.getElementById(
-        'ui-all-features',
-      ) as HTMLElement;
-      const infoBox = document.getElementById('ui-info-box') as HTMLElement;
-
-      // if there is data inster the data into the HTML container.
-      if (features.length > 0) {
-        infoBox.innerHTML = `<h3>${
-          features[0] ? features[0].properties.name : ''
-        }</h3>
-          <p><strong>${features[0] ? features[0].density : ''}</strong>
-            people living in the country.</p>
-        `;
-      } else {
-        infoBox.innerHTML = '<p>Hover over a country!</p>';
-      }
-
-      // displays all data from mapbox on the ui, shows whats available to us.
-      uiAllFeatures.innerHTML = JSON.stringify(displayFeatures, null, 2);
-    });
-
     /*
      * Draw Polygon around country borders
      * We will have to do this for ever country using https://geojson.io/,
      * Mapbox does have an API to automate this, but it costs money.
-     */
-    // Add a data source containing GeoJSON data
-    /*
-     * GET data from our API service on Heroku
      *
+     * GET data from our API service on Heroku
      * const getPopulationLevels = await getPopulationLevelsData();
      * const getGrossGdp = await getGrossGdpData();
      * use API calls
      * */
-
     const renderPopulationLevels = async () => {
-      const populationLevels = await getPopulationLevelsData();
-      console.log(populationLevels);
+      const { data } = await getPopulationLevelsData();
+      return data.norway;
     };
 
     map.addSource('Norway', {
@@ -171,7 +119,7 @@ export default async function MapBoxService(): Promise<void> {
               coordinates: [polyShapeNorway], // These coordinates outline Norway.
             },
             properties: {
-              description: `${renderNorway()} is here`,
+              description: await renderPopulationLevels(), // APi call to python backend
             },
           },
         ],
@@ -200,6 +148,55 @@ export default async function MapBoxService(): Promise<void> {
         'line-color': '#F66990',
         'line-width': 2,
       },
+    });
+
+    // change info window on hover
+    map.on('mousemove', async () => {
+      const features = map.queryRenderedFeatures();
+      /*
+       * Renders the white box on top right of screen
+       * */
+      const uiAllFeatures = document.getElementById(
+        'ui-all-features',
+      ) as HTMLElement;
+      const infoBox = document.getElementById('ui-info-box') as HTMLElement;
+
+      // if there is data inster the data into the HTML container.
+      if (features.length > 0) {
+        console.log('🚀', features[0]);
+        infoBox.innerHTML = `<h3>${
+          features[0] ? features[0].properties.name : ''
+        }</h3>
+          <p><strong>${features[0] ? features[0].density : ''}</strong>
+            people living in the country.</p>
+        `;
+      } else {
+        infoBox.innerHTML = '<p>Hover over a country!</p>';
+      }
+
+      const displayProperties = [
+        'type',
+        'properties',
+        'id',
+        'layer',
+        'source',
+        'sourceLayer',
+        'state',
+      ];
+
+      // https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures/
+      const displayFeatures = features.map((feat) => {
+        const displayFeat = {};
+
+        displayProperties.forEach((prop) => {
+          displayFeat[prop] = feat[prop];
+        });
+        console.log('🍏', displayFeat);
+        return displayFeat;
+      });
+
+      // displays all data from mapbox on the ui, shows whats available to us.
+      // uiAllFeatures.innerHTML = JSON.stringify(displayFeatures, null, 2);
     });
   });
 }
