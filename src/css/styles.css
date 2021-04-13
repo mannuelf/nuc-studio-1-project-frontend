@@ -1,20 +1,20 @@
 .nav-bar {
-	z-index: 9999;
+  z-index: 9999;
 }
 
 .ui-fbe-logo {
-	background-color: #0094ff;
-	color: #fff;
+  background-color: #0094ff;
+  color: #fff;
 }
 
 /**
 * Create a position for the map
 * on the page */
 #map {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 /**
@@ -22,36 +22,36 @@
 * (information box and legend) will be displayed
 * on the page. */
 .map-overlay {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	background: rgba(255, 255, 255, 0.8);
-	margin-right: 20px;
-	font-family: Arial, sans-serif;
-	overflow: auto;
-	border-radius: 3px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  margin-right: 20px;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  border-radius: 3px;
 }
 
 #features {
-	top: 0;
-	height: 180px;
-	margin-top: 20px;
-	width: 250px;
-	padding: 1rem;
+  top: 0;
+  height: 340px;
+  margin-top: 20px;
+  width: 250px;
+  padding: 1rem;
 }
 
 #legend {
-	padding: 10px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-	line-height: 18px;
-	margin-bottom: 90px;
-	width: 120px;
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  margin-bottom: 90px;
+  width: 120px;
 }
 
 .legend-key {
-	display: inline-block;
-	border-radius: 20%;
-	width: 10px;
-	height: 10px;
-	margin-right: 5px;
+  display: inline-block;
+  border-radius: 20%;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
 }

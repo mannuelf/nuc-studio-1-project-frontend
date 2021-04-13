@@ -1,13 +1,13 @@
 import mapboxgl from 'mapbox-gl';
-/*
- * import {
- * getPopulationLevelsData,
- * getGrossGdpData,
- * } from '../models/factbook-explorer-api';
- * */
+import {
+  getPopulationLevelsData,
+  getGrossGdpData,
+} from '../models/factbook-explorer-api';
+
 import { searchBar } from '../utils/searchBar';
 import { NORWAY as polyShapeNorway } from '../config/countries';
 import { MAPBOX_TOKEN, MAPBOX_STYLE_URI } from '../config/constants';
+import { renderNorway } from './map-ui-norway';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -19,21 +19,10 @@ export const map = new mapboxgl.Map({
   center: [0.0, 0.0],
 });
 
-// Call to searchBar function, enable search for user, must hit enter key.
+// Call to searchBar user must hit enter key not on keyup (yet).
 searchBar();
 
 export default async function MapBoxService(): Promise<void> {
-  /*
-   * GET data from our API service on Heroku
-   *
-   * const getPopulationLevels = await getPopulationLevelsData();
-   * const getGrossGdp = await getGrossGdpData();
-   *
-   * use API calls
-   * getPopulationLevels();
-   * getGrossGdp();
-   */
-
   map.on('load', async () => {
     /* *
      * https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1
@@ -131,7 +120,7 @@ export default async function MapBoxService(): Promise<void> {
        * Renders the white box on top right of screen
        * */
       const uiAllFeatures = document.getElementById(
-        'ui-all-features'
+        'ui-all-features',
       ) as HTMLElement;
       const infoBox = document.getElementById('ui-info-box') as HTMLElement;
 
@@ -156,18 +145,36 @@ export default async function MapBoxService(): Promise<void> {
      * We will have to do this for ever country using https://geojson.io/,
      * Mapbox does have an API to automate this, but it costs money.
      */
-    // Add a data source containing GeoJSON data.
+    // Add a data source containing GeoJSON data
     /*
-     * Norway
+     * GET data from our API service on Heroku
+     *
+     * const getPopulationLevels = await getPopulationLevelsData();
+     * const getGrossGdp = await getGrossGdpData();
+     * use API calls
      * */
+
+    const renderPopulationLevels = async () => {
+      const populationLevels = await getPopulationLevelsData();
+      console.log(populationLevels);
+    };
+
     map.addSource('Norway', {
       type: 'geojson',
       data: {
-        type: 'Feature',
-        geometry: {
-          type: 'Polygon',
-          coordinates: [polyShapeNorway], // These coordinates outline Norway.
-        },
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Polygon',
+              coordinates: [polyShapeNorway], // These coordinates outline Norway.
+            },
+            properties: {
+              description: `${renderNorway()} is here`,
+            },
+          },
+        ],
       },
     });
 
@@ -194,9 +201,5 @@ export default async function MapBoxService(): Promise<void> {
         'line-width': 2,
       },
     });
-  });
-
-  map.on('click', 'poi-label', (e) => {
-    console.log('A click happened:', e.lngLat);
   });
 }
