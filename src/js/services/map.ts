@@ -1,8 +1,10 @@
 import mapboxgl from 'mapbox-gl';
-import {
-  getPopulationLevelsData,
-  getGrossGdpData,
-} from '../models/factbook-explorer-api';
+/*
+ * import {
+ * getPopulationLevelsData,
+ * getGrossGdpData,
+ * } from '../models/factbook-explorer-api';
+ * */
 import { searchBar } from '../utils/searchBar';
 import { NORWAY as polyShapeNorway } from '../config/countries';
 import { MAPBOX_TOKEN, MAPBOX_STYLE_URI } from '../config/constants';
@@ -23,13 +25,14 @@ searchBar();
 export default async function MapBoxService(): Promise<void> {
   /*
    * GET data from our API service on Heroku
-   * */
-  const getPopulationLevels = await getPopulationLevelsData();
-  const getGrossGdp = await getGrossGdpData();
-
-  // use API calls
-  getPopulationLevels();
-  getGrossGdp();
+   *
+   * const getPopulationLevels = await getPopulationLevelsData();
+   * const getGrossGdp = await getGrossGdpData();
+   *
+   * use API calls
+   * getPopulationLevels();
+   * getGrossGdp();
+   */
 
   map.on('load', async () => {
     /* *
@@ -101,8 +104,7 @@ export default async function MapBoxService(): Promise<void> {
     }
 
     // change info window on hover
-    map.on('mousemove', (e) => {
-      const country = e.target;
+    map.on('mousemove', () => {
       const features = map.queryRenderedFeatures();
 
       const displayProperties = [
@@ -128,7 +130,7 @@ export default async function MapBoxService(): Promise<void> {
       /*
        * Renders the white box on top right of screen
        * */
-      const infoBox = document.querySelector('ui-info-box') as HTMLElement;
+      const infoBox = document.getElementById('ui-info-box') as HTMLElement;
       if (features.length > 0) {
         infoBox.innerHTML = `<h3>${
           features[0] ? features[0].properties.name : ''
@@ -140,10 +142,10 @@ export default async function MapBoxService(): Promise<void> {
         infoBox.innerHTML = '<p>Hover over a country!</p>';
       }
 
-      document.getElementById('ui-all-features').innerHTML = JSON.stringify(
+      document.getElementById('.ui-all-features').innerHTML = JSON.stringify(
         displayFeatures,
         null,
-        2,
+        2
       );
     });
 
