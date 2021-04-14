@@ -1,21 +1,21 @@
 import mapboxgl from 'mapbox-gl';
-import {
-  getGrossGdpData,
-  getPopulationLevelsData,
-} from '../models/factbook-explorer-api';
+import { getPopulationLevelsData } from '../models/factbook-explorer-api';
 
-import { bBoxCoords, searchBar } from '../utils/searchBar';
-import { NORWAY as polyShapeNorway } from '../config/countries';
+import { searchBar } from '../utils/searchBar';
 import {
   ABOUT_MESSAGE,
   MAPBOX_STYLE_URI,
   MAPBOX_TOKEN,
 } from '../config/constants';
 import getBboxCoordinates from '../utils/getBboxCoordinates';
+import createLegend from '../components/createLegend';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
-// new up an instance of MapBox map and export it for other modules to use.
+/*
+ * New up an instance of MapBox map,
+ * export it for other modules to use
+ */
 export const map = new mapboxgl.Map({
   container: 'map',
   style: MAPBOX_STYLE_URI,
@@ -23,84 +23,43 @@ export const map = new mapboxgl.Map({
   center: [0.0, 0.0],
 });
 
-// Call to searchBar user must hit enter key not on keyup (yet).
+/*
+ * Init search bar.
+ * User must hit enter. TODO: search on keyup
+ */
 searchBar();
 
+/*
+ * MapBox Service
+ * export as module to allow use from any module.
+ * */
 export default async function MapBoxService(): Promise<void> {
-  const uiAllFeatures = document.getElementById(
+  /* const uiAllFeatures = document.getElementById(
     'ui-all-features'
   ) as HTMLElement;
-  const infoBox = document.getElementById('ui-info-box') as HTMLElement;
+  const infoBox = document.getElementById('ui-info-box') as HTMLElement; */
 
+  /*
+   * default location set to Norway,
+   * TODO: use GEOLOCATION API to automate this
+   */
   const defaultLocation = [
     4.40079698619525,
     57.906609500058,
     31.2678854952283,
     71.2176742998415,
-  ]; // default location set to Norway, we should use GEOLOCATION API to automate this
-
-  // define layer names
-  const layers = [
-    '0-10',
-    '10-20',
-    '20-50',
-    '50-100',
-    '100-200',
-    '200-500',
-    '500-1000',
-    '1000+',
   ];
-
-  const colors = [
-    '#FFEDA0',
-    '#FED976',
-    '#FEB24C',
-    '#FD8D3C',
-    '#FC4E2A',
-    '#E31A1C',
-    '#BD0026',
-    '#800026',
-  ];
-
-  // create legend
-  const legend = document.querySelector('#legend');
 
   map.on('load', async () => {
-    /* *
-     * https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-1
-     * https://docs.mapbox.com/help/tutorials/choropleth-studio-gl-pt-2
-     *
-     * This function does reverse geocoding on a string input. user searches
-     * USE, Germany etc & the GEOCODING API will return an object that has
-     * 4 GPS coordinates.
-     *
-     * The GPS coords are then passed to the map.fitBounds(bboxCoordinates.bbox)
-     * function. The map will zoom to that location.
-     *
-     * by default the map loads up on NORWAY, this can be changed.
-     * */
-
-    // make a pointer cursor
     map.getCanvas().style.cursor = 'default';
 
-    // pass default GPS so map loads with something even if user has not searched.
-    // set map bounds to a continent
+    /*
+     * pass default GPS > map loads with something even
+     * if user has not searched. set map bounds to a continent
+     */
     map.fitBounds(defaultLocation);
 
-    for (let i = 0; i < layers.length; i += 1) {
-      const layer = layers[i];
-      const color = colors[i];
-      const item = document.createElement('div');
-      const key = document.createElement('span');
-      key.className = 'legend-key';
-      key.style.backgroundColor = color;
-
-      const value = document.createElement('span');
-      value.innerHTML = layer;
-      item.appendChild(key);
-      item.appendChild(value);
-      legend.appendChild(item);
-    }
+    createLegend();
 
     // change info window on click
     map.on('click', async (e) => {
@@ -120,14 +79,14 @@ export default async function MapBoxService(): Promise<void> {
       const country = selectedCountry.properties.name_en.toLowerCase();
 
       /*
-       * * Draw Polygon around country borders
-       * * We will have to do this for ever country using https://geojson.io/,
-       * * Mapbox does have an API to automate this, but it costs money.
-       * *
-       * * GET data from our API service on Heroku
-       * * const getPopulationLevels = await getPopulationLevelsData();
-       * * const getGrossGdp = await getGrossGdpData();
-       * * use API calls
+       * Draw Polygon around country borders
+       * We will have to do this for ever country using https://geojson.io/,
+       * Mapbox does have an API to automate this, but it costs money.
+       *
+       * GET data from our API service on Heroku
+       * const getPopulationLevels = await getPopulationLevelsData();
+       * const getGrossGdp = await getGrossGdpData();
+       * use API calls
        * * */
       const renderPopulationLevels = async () => {
         const data = await getPopulationLevelsData(country);
@@ -136,56 +95,53 @@ export default async function MapBoxService(): Promise<void> {
 
       // https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
       map.addSource(country, {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [
-              {
-                type: 'Feature',
-                geometry: {
-                  type: 'Polygon',
-                  // These coordinates outline the country.
-                  coordinates: await getBboxCoordinates(country), 
-                },
-                properties: {
-                  description: ABOUT_MESSAGE,
-                  data: await renderPopulationLevels(country);
-                },
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              geometry: {
+                type: 'Polygon',
+                coordinates: await getBboxCoordinates(country),
               },
-            ],
-          },
-        });
+              properties: {
+                description: ABOUT_MESSAGE,
+                data: await renderPopulationLevels(country),
+              },
+            },
+          ],
+        },
+      });
 
-        // Add a new layer to visualize the polygon.
-        map.addLayer({
-          id: country,
-          type: 'fill',
-          source: country, // reference the data source
-          layout: {},
-          paint: {
-            'fill-color': '#2a9d8f', // color for fill
-            'fill-opacity': 0.3,
-          },
-        });
+      // Add a new layer to visualize the polygon.
+      map.addLayer({
+        id: country,
+        type: 'fill',
+        source: country, // reference the data source
+        layout: {},
+        paint: {
+          'fill-color': '#2a9d8f', // color for fill
+          'fill-opacity': 0.3,
+        },
+      });
 
-        // Add an outline around the polygon.
-        map.addLayer({
-          id: 'outline',
-          type: 'line',
-          source: country,
-          layout: {},
-          paint: {
-            'line-color': '#F66990',
-            'line-width': 3,
-          },
-        });
-
-      console.log(country, displayFeatures);
+      // Add an outline around the polygon.
+      map.addLayer({
+        id: 'outline',
+        type: 'line',
+        source: country,
+        layout: {},
+        paint: {
+          'line-color': '#F66990',
+          'line-width': 3,
+        },
+      });
 
       document.getElementById('features').innerHTML = JSON.stringify(
         displayFeatures,
         null,
-        2
+        2,
       );
     });
   });
