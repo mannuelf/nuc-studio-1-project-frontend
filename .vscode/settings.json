@@ -5,5 +5,8 @@
 	"editor.detectIndentation": true,
 	"[scss]": {
 		"editor.formatOnSave": false
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	}
 }

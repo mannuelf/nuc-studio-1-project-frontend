@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ENDPOINT_GEOCODING, MAPBOX_TOKEN } from '../config/constants';
-import { Ibbox } from '../global.d';
+import { Country, Ibbox } from '../global.d';
 
 /*
  * This does reverse geocoding on a given string.
@@ -10,22 +10,19 @@ import { Ibbox } from '../global.d';
  * this can be changed.
  * */
 export default async function getBboxCoordinates(
-  country: string
+  country: Country
 ): Promise<Ibbox> {
-  console.group('getBboxCoordinates');
   try {
     let bbox = [];
-    const response = await axios.get(
+    const resp = await axios.get(
       `${ENDPOINT_GEOCODING}/${country}.json?limit=1&access_token=${MAPBOX_TOKEN}`
     );
-    const [bboxCoordinates] = response.data.features;
+    const [bboxCoordinates] = resp.data.features;
     bbox = bboxCoordinates.bbox;
-    console.log(bbox);
     return bbox;
   } catch (error) {
     throw new Error(error);
   } finally {
     console.log('complete');
   }
-  console.groupEnd();
 }

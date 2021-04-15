@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>FactBook Explorers</title>
+    <title>About</title>
     <meta
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
@@ -71,12 +71,8 @@
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
           <div class="navbar-item">
-            <a
-              href="./about.html"
-              title="read about this app"
-              class="button is-small"
-            >
-              About
+            <a href="./" title="go back to map" class="button is-small">
+              back to Map
             </a>
           </div>
           <div class="navbar-item">
@@ -97,14 +93,23 @@
       </div>
     </nav>
 
-    <div class="ui-map-section">
-      <div id="map"></div>
-      <div class="map-overlay" id="features">
-        <div id="ui-features"><p>Search & click on a country</p></div>
+    <div class="layout">
+      <div class="ui-map-section">
+        <h1 class="is-size-1">About</h1>
+        <p>
+          NOTICE: © 2021 Mapbox and its suppliers. All rights reserved. Use of
+          this data is subject to the Mapbox Terms of Service
+          (https://www.mapbox.com/about/maps/). This response and the
+          information it contains may not be retained. POI(s) provided by
+          Foursquare.
+        </p>
       </div>
-      <div class="map-overlay" id="legend"></div>
     </div>
-
+    <script src="./js/app.ts"></script>
+  </body>
+</html>
+      </div>
+    </div>
     <script src="./js/app.ts"></script>
   </body>
 </html>

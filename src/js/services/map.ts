@@ -1,13 +1,16 @@
+/*
+ * Import all modules required to enable map functionality.
+ * */
 import mapboxgl from 'mapbox-gl';
-import { getPopulationLevelsData } from '../models/factbook-explorer-api';
-import { searchBar } from '../utils/searchBar';
+import { getPopulationLevelsData } from '../models/factbookExplorerApi';
+import getPolygon from '../models/getPolygon';
+import searchBar from '../models/searchBar';
+import createLegend from '../components/createLegend';
 import {
   ABOUT_MESSAGE,
   MAPBOX_STYLE_URI,
   MAPBOX_TOKEN,
 } from '../config/constants';
-import getBboxCoordinates from '../utils/getBboxCoordinates';
-import createLegend from '../components/createLegend';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -33,10 +36,7 @@ searchBar();
  * export as module to allow use from any module.
  * */
 export default async function MapBoxService(): Promise<void> {
-  /* const uiAllFeatures = document.getElementById(
-    'ui-all-features'
-  ) as HTMLElement;
-  const infoBox = document.getElementById('ui-info-box') as HTMLElement; */
+  const uiFeatures = document.querySelector('#ui-features') as HTMLElement;
 
   /*
    * default location set to Norway,
@@ -51,6 +51,8 @@ export default async function MapBoxService(): Promise<void> {
 
   map.on('load', async () => {
     map.getCanvas().style.cursor = 'default';
+
+    let currentCountry = '';
 
     /*
      * pass default GPS > map loads with something even
@@ -88,16 +90,11 @@ export default async function MapBoxService(): Promise<void> {
        * use API calls
        * * */
       const renderPopulationLevels = async (country) => {
-        console.group('renderPopulationLevels', country);
         const data = await getPopulationLevelsData(country);
-        console.log(data);
-        console.groupEnd();
         return data;
       };
 
-      const tempVarTesting = await getBboxCoordinates(country);
-      console.log(tempVarTesting);
-      console.log(country);
+      const setPolygons = getPolygon(country);
       // https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
       map.addSource(country, {
         type: 'geojson',
@@ -108,9 +105,10 @@ export default async function MapBoxService(): Promise<void> {
               type: 'Feature',
               geometry: {
                 type: 'Polygon',
-                coordinates: [await getBboxCoordinates(country)],
+                coordinates: [setPolygons[country]],
               },
               properties: {
+                mannuel: 'ferreira',
                 description: ABOUT_MESSAGE,
                 data: await renderPopulationLevels(country),
               },
@@ -118,6 +116,18 @@ export default async function MapBoxService(): Promise<void> {
           ],
         },
       });
+
+      /*
+       *
+       * Teardown map polygon, to enable render new polygone
+       * */
+      if (currentCountry !== '' && currentCountry !== country) {
+        map.removeLayer('outline');
+        map.removeLayer(currentCountry);
+        map.removeSource(currentCountry);
+      }
+
+      currentCountry = country;
 
       // Add a new layer to visualize the polygon.
       map.addLayer({
@@ -143,11 +153,8 @@ export default async function MapBoxService(): Promise<void> {
         },
       });
 
-      document.getElementById('features').innerHTML = JSON.stringify(
-        displayFeatures,
-        null,
-        2
-      );
+      console.dir(uiFeatures);
+      uiFeatures.innerHTML = JSON.stringify(displayFeatures, null, 2);
     });
   });
 }
