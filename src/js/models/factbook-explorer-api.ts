@@ -76,6 +76,8 @@ interface IData {
 }
 
 export const getPopulationLevelsData = async (country): Promise<IData> => {
+  console.group('getPopulationLevelsData');
+  console.log(country);
   try {
     const result = await axios.get(`${API_BASE_URL}/population-levels`);
     const { data } = result;
@@ -84,12 +86,15 @@ export const getPopulationLevelsData = async (country): Promise<IData> => {
       .filter((key) => key.includes(country))
       .reduce((obj, key) => {
         obj[key] = allData[key];
+        console.log(obj);
         return obj;
       }, {});
-    });
   } catch (error) {
     throw new Error(error);
+  } finally {
+    console.log('complete');
   }
+  console.groupEnd();
 };
 
 export const getGrossGdpData = async (country): Promise<IData> => {

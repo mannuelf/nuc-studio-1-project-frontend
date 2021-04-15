@@ -1,6 +1,5 @@
 import mapboxgl from 'mapbox-gl';
 import { getPopulationLevelsData } from '../models/factbook-explorer-api';
-
 import { searchBar } from '../utils/searchBar';
 import {
   ABOUT_MESSAGE,
@@ -76,7 +75,7 @@ export default async function MapBoxService(): Promise<void> {
       });
 
       const [selectedCountry] = displayFeatures;
-      const country = selectedCountry.properties.name_en.toLowerCase();
+      const country = selectedCountry?.properties.name_en.toLowerCase();
 
       /*
        * Draw Polygon around country borders
@@ -88,11 +87,17 @@ export default async function MapBoxService(): Promise<void> {
        * const getGrossGdp = await getGrossGdpData();
        * use API calls
        * * */
-      const renderPopulationLevels = async () => {
+      const renderPopulationLevels = async (country) => {
+        console.group('renderPopulationLevels', country);
         const data = await getPopulationLevelsData(country);
+        console.log(data);
+        console.groupEnd();
         return data;
       };
 
+      const tempVarTesting = await getBboxCoordinates(country);
+      console.log(tempVarTesting);
+      console.log(country);
       // https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
       map.addSource(country, {
         type: 'geojson',
@@ -103,7 +108,7 @@ export default async function MapBoxService(): Promise<void> {
               type: 'Feature',
               geometry: {
                 type: 'Polygon',
-                coordinates: await getBboxCoordinates(country),
+                coordinates: [await getBboxCoordinates(country)],
               },
               properties: {
                 description: ABOUT_MESSAGE,
@@ -141,7 +146,7 @@ export default async function MapBoxService(): Promise<void> {
       document.getElementById('features').innerHTML = JSON.stringify(
         displayFeatures,
         null,
-        2,
+        2
       );
     });
   });

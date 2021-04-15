@@ -9,19 +9,23 @@ import { Ibbox } from '../global.d';
  * The map will zoom to that location by default the map loads up on NORWAY,
  * this can be changed.
  * */
-
 export default async function getBboxCoordinates(
-  country: string,
+  country: string
 ): Promise<Ibbox> {
+  console.group('getBboxCoordinates');
   try {
     let bbox = [];
     const response = await axios.get(
-      `${ENDPOINT_GEOCODING}/${country}.json?limit=1&access_token=${MAPBOX_TOKEN}`,
+      `${ENDPOINT_GEOCODING}/${country}.json?limit=1&access_token=${MAPBOX_TOKEN}`
     );
     const [bboxCoordinates] = response.data.features;
     bbox = bboxCoordinates.bbox;
+    console.log(bbox);
     return bbox;
   } catch (error) {
     throw new Error(error);
+  } finally {
+    console.log('complete');
   }
+  console.groupEnd();
 }
