@@ -53,6 +53,7 @@ export default async function MapBoxService(): Promise<void> {
     map.getCanvas().style.cursor = 'default';
 
     let currentCountry = '';
+    let factbookExplorerApiData = {};
 
     /*
      * pass default GPS > map loads with something even
@@ -95,6 +96,7 @@ export default async function MapBoxService(): Promise<void> {
       };
 
       const setPolygons = getPolygon(country);
+
       // https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
       map.addSource(country, {
         type: 'geojson',
@@ -107,15 +109,53 @@ export default async function MapBoxService(): Promise<void> {
                 type: 'Polygon',
                 coordinates: [setPolygons[country]],
               },
-              properties: {
-                mannuel: 'ferreira',
-                description: ABOUT_MESSAGE,
-                data: await renderPopulationLevels(country),
-              },
+              properties: {},
             },
           ],
         },
       });
+
+      /*
+       * API call to python backend to get country specifi data.
+       * */
+      const cachedFeatures = displayFeatures;
+      factbookExplorerApiData = await renderPopulationLevels(country);
+      cachedFeatures.push(factbookExplorerApiData);
+      const [, renderCountry] = cachedFeatures;
+      console.log('>', renderCountry.country);
+
+      const renderTableHeader = () => {
+        for (let [key, value] of Object.entries(renderCountry[country]) {
+          console.log(key);
+          return `<td>${key}</td>`
+        }
+      }
+
+      const renderTableRow = () => {
+        for (let [key, value] of Object.entries(renderCountry[country]) {
+          return `<td>${value}</td>`
+        }
+      }
+
+      uiFeatures.innerHTML = `
+          <h1 class="is-size-3">${country}</h1>
+          <h2 class="is-size-5">Population levels</h2>
+          <p>Growth year on year in Thousands</p>
+          <div class="table-data">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>${renderTableHeader()}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  ${renderTableRow()}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      `;
 
       /*
        *
@@ -152,9 +192,6 @@ export default async function MapBoxService(): Promise<void> {
           'line-width': 3,
         },
       });
-
-      console.dir(uiFeatures);
-      uiFeatures.innerHTML = JSON.stringify(displayFeatures, null, 2);
     });
   });
 }

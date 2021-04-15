@@ -14,12 +14,13 @@ export const getPopulationLevelsData = async (
     const result = await axios.get(`${API_BASE_URL}/population-levels`);
     const { data } = result;
     const allData = data[0];
-    Object.keys(allData)
+    const resp = Object.keys(allData)
       .filter((key) => key.includes(country))
       .reduce((obj, key) => {
         obj[key] = allData[key];
         return obj;
       }, {});
+    return resp;
   } catch (error) {
     throw new Error(error);
   } finally {
@@ -32,12 +33,13 @@ export const getGrossGdpData = async (country: Country): Promise<any> => {
     const result = await axios.get(`${API_BASE_URL}/gross-gdp`);
     const { data } = result;
     const allData = data[0];
-    Object.keys(allData)
+    const resp = Object.keys(allData)
       .filter((key) => key.includes(country))
       .reduce((obj, key) => {
         obj[key] = allData[key];
         return obj;
       }, {});
+    return resp;
   } catch (error) {
     throw new Error(error);
   } finally {
