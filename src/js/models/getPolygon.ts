@@ -1,4 +1,4 @@
-import * as Polygon from '../config/setPolygons';
+import * as Polygon from '../config/polygons';
 import { Country } from '../global.d';
 
 export default function getPolygon(country: Country): any {
@@ -8,6 +8,7 @@ export default function getPolygon(country: Country): any {
     germany: Polygon.GERMANY,
     luxembourg: Polygon.LUXEMBOURG,
     norway: Polygon.NORWAY,
+    'south-africa': Polygon.SOUTHAFRICA,
     sweden: Polygon.SWEDEN,
   };
 
