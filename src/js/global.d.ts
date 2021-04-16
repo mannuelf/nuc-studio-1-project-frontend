@@ -82,7 +82,7 @@ export type Country = {
  * state for API fetching
  * https://www.typescriptlang.org/docs/handbook/enums.html
  */
-export enum ServerResponse {
+export enum ApiResponse {
   OK = 200,
   FOUND = 302,
   BAD_REQUEST = 400,

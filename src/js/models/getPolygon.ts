@@ -1,13 +1,13 @@
-import * as Country from '../config/countryPolygons';
+import * as Polygon from '../config/setPolygons';
 import { Country } from '../global.d';
 
 export default function getPolygon(country: Country): any {
   const COUNTRIES = {
-    australia: Country.AUSTRALIA,
-    germany: Country.GERMANY,
-    luxembourg: Country.LUXEMBOURG,
-    norway: Country.NORWAY,
-    sweden: Country.SWEDEN,
+    australia: Polygon.AUSTRALIA,
+    germany: Polygon.GERMANY,
+    luxembourg: Polygon.LUXEMBOURG,
+    norway: Polygon.NORWAY,
+    sweden: Polygon.SWEDEN,
   };
 
   const polygonShape = Object.keys(COUNTRIES)

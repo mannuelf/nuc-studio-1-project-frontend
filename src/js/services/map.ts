@@ -4,13 +4,14 @@
 import mapboxgl from 'mapbox-gl';
 import { getPopulationLevelsData } from '../models/factbookExplorerApi';
 import getPolygon from '../models/getPolygon';
-import searchBar from '../models/searchBar';
+import getGeocoding from '../models/getGeocoding';
 import createLegend from '../components/createLegend';
 import {
-  ABOUT_MESSAGE,
   MAPBOX_STYLE_URI,
   MAPBOX_TOKEN,
 } from '../config/constants';
+
+export const uiInfoBox = document.querySelector('#ui-features') as HTMLElement;
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -29,14 +30,13 @@ export const map = new mapboxgl.Map({
  * Init search bar.
  * User must hit enter. TODO: search on keyup
  */
-searchBar();
+getGeocoding();
 
 /*
  * MapBox Service
  * export as module to allow use from any module.
  * */
 export default async function MapBoxService(): Promise<void> {
-  const uiFeatures = document.querySelector('#ui-features') as HTMLElement;
 
   /*
    * default location set to Norway,
@@ -122,7 +122,7 @@ export default async function MapBoxService(): Promise<void> {
       factbookExplorerApiData = await renderPopulationLevels(country);
       cachedFeatures.push(factbookExplorerApiData);
       const [, renderCountry] = cachedFeatures;
-      console.log('>', renderCountry.country);
+      console.log('>', renderCountry);
 
       const renderTableHeader = () => {
         for (let [key, value] of Object.entries(renderCountry[country]) {
@@ -137,7 +137,7 @@ export default async function MapBoxService(): Promise<void> {
         }
       }
 
-      uiFeatures.innerHTML = `
+      uiInfoBox.innerHTML = `
           <h1 class="is-size-3">${country}</h1>
           <h2 class="is-size-5">Population levels</h2>
           <p>Growth year on year in Thousands</p>

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../config/constants';
 import { Country } from '../global.d';
+import { uiInfoBox } from '../services/map';
 
 // fetch and return multiple sets of data
 // each endpoint will return its own data
@@ -11,17 +12,22 @@ export const getPopulationLevelsData = async (
   country: Country
 ): Promise<any> => {
   try {
-    const result = await axios.get(`${API_BASE_URL}/population-levels`);
-    const { data } = result;
-    const allData = data[0];
-    const resp = Object.keys(allData)
+    const resp = await axios.get(`${API_BASE_URL}/population-levels`);
+
+    uiInfoBox.innerHTML = 'Loading data...';
+
+    const { data } = resp;
+    const countries = data[0];
+    const result = Object.keys(countries)
       .filter((key) => key.includes(country))
       .reduce((obj, key) => {
-        obj[key] = allData[key];
+        obj[key] = countries[key];
         return obj;
       }, {});
-    return resp;
+
+    return result;
   } catch (error) {
+    uiInfoBox.innerHTML = `${error}`;
     throw new Error(error);
   } finally {
     console.log('complete');

@@ -8,7 +8,7 @@ import { Ibbox } from '../global.d';
 
 export let bBoxCoords = [];
 
-export default async function searchBar() {
+export default async function getGeocoding() {
   const searchForm = document.querySelector('#searchBar') as HTMLFormElement;
 
   searchForm.addEventListener('submit', async (e: any): Promise<Ibbox> => {
