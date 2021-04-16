@@ -6,10 +6,7 @@ import { getPopulationLevelsData } from '../models/factbookExplorerApi';
 import getPolygon from '../models/getPolygon';
 import getGeocoding from '../models/getGeocoding';
 import createLegend from '../components/createLegend';
-import {
-  MAPBOX_STYLE_URI,
-  MAPBOX_TOKEN,
-} from '../config/constants';
+import { MAPBOX_STYLE_URI, MAPBOX_TOKEN } from '../config/constants';
 
 export const uiInfoBox = document.querySelector('#ui-features') as HTMLElement;
 
@@ -37,12 +34,16 @@ getGeocoding();
  * export as module to allow use from any module.
  * */
 export default async function MapBoxService(): Promise<void> {
+  let currentCountry = '';
+  let factbookExplorerApiData = {};
+  let country = '';
+  const uiTable = document.querySelector('#ui-table-data') as HTMLElement;
 
   /*
    * default location set to Norway,
    * TODO: use GEOLOCATION API to automate this
    */
-  const defaultLocation = [
+  const defaultLocation: [number, number, number, number] = [
     4.40079698619525,
     57.906609500058,
     31.2678854952283,
@@ -50,17 +51,12 @@ export default async function MapBoxService(): Promise<void> {
   ];
 
   map.on('load', async () => {
-    map.getCanvas().style.cursor = 'default';
-
-    let currentCountry = '';
-    let factbookExplorerApiData = {};
-
     /*
      * pass default GPS > map loads with something even
      * if user has not searched. set map bounds to a continent
      */
     map.fitBounds(defaultLocation);
-
+    map.getCanvas().style.cursor = 'default';
     createLegend();
 
     // change info window on click
@@ -78,7 +74,10 @@ export default async function MapBoxService(): Promise<void> {
       });
 
       const [selectedCountry] = displayFeatures;
-      const country = selectedCountry?.properties.name_en.toLowerCase();
+
+      if (selectedCountry.id !== undefined) {
+        country = selectedCountry.properties.name_en.toLowerCase();
+      }
 
       /*
        * Draw Polygon around country borders
@@ -116,46 +115,45 @@ export default async function MapBoxService(): Promise<void> {
       });
 
       /*
-       * API call to python backend to get country specifi data.
+       * API call to python backend to get country specific data.
+       * displayFeatures is data gotten from mapbox
        * */
       const cachedFeatures = displayFeatures;
       factbookExplorerApiData = await renderPopulationLevels(country);
       cachedFeatures.push(factbookExplorerApiData);
       const [, renderCountry] = cachedFeatures;
-      console.log('>', renderCountry);
 
-      const renderTableHeader = () => {
-        for (let [key, value] of Object.entries(renderCountry[country]) {
-          console.log(key);
-          return `<td>${key}</td>`
-        }
-      }
+      const renderTableRow = (country: string): void => {
+        const tableData = renderCountry[country];
+        if (tableData) {
+          for (let prop in tableData) {
+            const item = document.createElement('div');
+            item.classList.add('table-cell');
 
-      const renderTableRow = () => {
-        for (let [key, value] of Object.entries(renderCountry[country]) {
-          return `<td>${value}</td>`
+            const heading = document.createElement('span');
+            heading.classList.add('table-header');
+
+            const value = document.createElement('span');
+            value.classList.add('table-data');
+
+            heading.innerHTML = prop;
+            value.innerHTML = tableData[prop];
+
+            item.appendChild(heading);
+            item.appendChild(value);
+            uiTable?.appendChild(item);
+          }
         }
-      }
+      };
 
       uiInfoBox.innerHTML = `
-          <h1 class="is-size-3">${country}</h1>
-          <h2 class="is-size-5">Population levels</h2>
-          <p>Growth year on year in Thousands</p>
-          <div class="table-data">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>${renderTableHeader()}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  ${renderTableRow()}
-                </tr>
-              </tbody>
-            </table>
-          </div>
-      `;
+            <h1 class="is-size-3">${country}</h1>
+            <h2 class="is-size-5">Population levels</h2>
+            <p>Growth year on year in Thousands</p>
+            <div class="table-results">
+              ${renderTableRow(country) ? renderTableRow(country) : ''}
+            </div>
+        `;
 
       /*
        *
@@ -167,6 +165,7 @@ export default async function MapBoxService(): Promise<void> {
         map.removeSource(currentCountry);
       }
 
+      // set local var to clicked country.
       currentCountry = country;
 
       // Add a new layer to visualize the polygon.
@@ -176,7 +175,7 @@ export default async function MapBoxService(): Promise<void> {
         source: country, // reference the data source
         layout: {},
         paint: {
-          'fill-color': '#2a9d8f', // color for fill
+          'fill-color': '#E31A1C', // color for fill
           'fill-opacity': 0.3,
         },
       });
@@ -188,7 +187,7 @@ export default async function MapBoxService(): Promise<void> {
         source: country,
         layout: {},
         paint: {
-          'line-color': '#F66990',
+          'line-color': '#800026',
           'line-width': 3,
         },
       });

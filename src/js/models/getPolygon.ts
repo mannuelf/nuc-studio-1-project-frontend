@@ -4,6 +4,7 @@ import { Country } from '../global.d';
 export default function getPolygon(country: Country): any {
   const COUNTRIES = {
     australia: Polygon.AUSTRALIA,
+    finland: Polygon.FINLAND,
     germany: Polygon.GERMANY,
     luxembourg: Polygon.LUXEMBOURG,
     norway: Polygon.NORWAY,
