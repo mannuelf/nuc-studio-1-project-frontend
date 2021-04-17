@@ -6,6 +6,7 @@ export default function getPolygon(country: Country): any {
     australia: Polygon.AUSTRALIA,
     finland: Polygon.FINLAND,
     germany: Polygon.GERMANY,
+    lesotho: Polygon.LESOTHO,
     luxembourg: Polygon.LUXEMBOURG,
     norway: Polygon.NORWAY,
     'south-africa': Polygon.SOUTHAFRICA,

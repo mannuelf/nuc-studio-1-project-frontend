@@ -9,6 +9,7 @@ import createLegend from '../components/createLegend';
 import { MAPBOX_STYLE_URI, MAPBOX_TOKEN } from '../config/constants';
 
 export const uiInfoBox = document.querySelector('#ui-features') as HTMLElement;
+export const uiTable = document.querySelector('#ui-table-data') as HTMLElement;
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -35,9 +36,8 @@ getGeocoding();
  * */
 export default async function MapBoxService(): Promise<void> {
   let currentCountry = '';
-  let factbookExplorerApiData = {};
+  let fetchFactbookExplorerApiData = {};
   let country = '';
-  const uiTable = document.querySelector('#ui-table-data') as HTMLElement;
 
   /*
    * default location set to Norway,
@@ -65,6 +65,7 @@ export default async function MapBoxService(): Promise<void> {
       const displayProperties = ['type', 'properties', 'id', 'layer', 'source'];
 
       // https://docs.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures/
+      // returns all data for country,city,place from mapbbox
       const displayFeatures = features.map((feat) => {
         const displayFeat = {};
         displayProperties.forEach((prop) => {
@@ -119,30 +120,30 @@ export default async function MapBoxService(): Promise<void> {
        * displayFeatures is data gotten from mapbox
        * */
       const cachedFeatures = displayFeatures;
-      factbookExplorerApiData = await renderPopulationLevels(country);
-      cachedFeatures.push(factbookExplorerApiData);
+      fetchFactbookExplorerApiData = await renderPopulationLevels(country);
+      cachedFeatures.push(fetchFactbookExplorerApiData);
       const [, renderCountry] = cachedFeatures;
 
-      const renderTableRow = (country: string): void => {
+      const renderTableRow = (country: string) => {
         const tableData = renderCountry[country];
-        if (tableData) {
-          for (let prop in tableData) {
-            const item = document.createElement('div');
-            item.classList.add('table-cell');
+        uiTable.innerHTML = '';
+        for (let prop in tableData) {
+          const item = document.createElement('div');
+          item.classList.add('table-cell');
 
-            const heading = document.createElement('span');
-            heading.classList.add('table-header');
+          const heading = document.createElement('span');
+          heading.classList.add('table-header');
 
-            const value = document.createElement('span');
-            value.classList.add('table-data');
+          const value = document.createElement('span');
+          value.classList.add('table-data');
 
-            heading.innerHTML = prop;
-            value.innerHTML = tableData[prop];
+          heading.innerHTML = prop;
+          value.innerHTML = tableData[prop];
 
-            item.appendChild(heading);
-            item.appendChild(value);
-            uiTable?.appendChild(item);
-          }
+          item.appendChild(heading);
+          item.appendChild(value);
+
+          uiTable?.appendChild(item);
         }
       };
 
