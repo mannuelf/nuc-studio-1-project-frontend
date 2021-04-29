@@ -7,7 +7,7 @@ import { uiInfoBox } from '../services/map';
 // each endpoint will return its own data
 // each endpoint will need it's own api call
 // The data should be flat json like object with properties and values
-// the mapbox map should call this service and get the data is needs
+// the mapbox map should call this service and get the data it needs
 export const getPopulationLevelsData = async (
   country: Country
 ): Promise<any> => {

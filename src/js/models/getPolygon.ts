@@ -11,6 +11,7 @@ export default function getPolygon(country: Country): any {
     norway: Polygon.NORWAY,
     'south-africa': Polygon.SOUTHAFRICA,
     sweden: Polygon.SWEDEN,
+    greenland: Polygon.GREENLAND,
   };
 
   const polygonShape = Object.keys(COUNTRIES)

@@ -12,7 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/mannuelf/nuc-studio-1-project-frontend.git"
   },
-  "keywords": ["JavaScript", "HTML", "CSS", "API"],
+  "keywords": [
+    "JavaScript",
+    "HTML",
+    "CSS",
+    "API"
+  ],
   "author": "mannuelf <mannuel.ferreira@gmail.com>",
   "license": "MIT",
   "bugs": {
@@ -49,5 +54,7 @@
     "prettier": "^2.2.1",
     "typescript": "^4.1.5"
   },
-  "browserslist": ["since 2017-06"]
+  "browserslist": [
+    "since 2017-06"
+  ]
 }

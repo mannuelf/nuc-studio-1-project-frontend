@@ -16,7 +16,7 @@ export default function createLegend(): void {
   ];
 
   const colors = [
-    '#FFEDA0',
+    '#000000',
     '#FED976',
     '#FEB24C',
     '#FD8D3C',

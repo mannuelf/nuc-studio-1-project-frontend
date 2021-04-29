@@ -121,6 +121,7 @@ export default async function MapBoxService(): Promise<void> {
        * */
       const cachedFeatures = displayFeatures;
       fetchFactbookExplorerApiData = await renderPopulationLevels(country);
+      console.log(fetchFactbookExplorerApiData);
       cachedFeatures.push(fetchFactbookExplorerApiData);
       const [, renderCountry] = cachedFeatures;
 
