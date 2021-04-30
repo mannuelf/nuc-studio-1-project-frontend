@@ -34,9 +34,9 @@
 
 #features {
   top: 0;
-  height: 340px;
+  height: 350px;
   margin-top: 20px;
-  width: 250px;
+  width: 320px;
   padding: 1rem;
 }
 
@@ -59,7 +59,9 @@
   height: 10px;
   margin-right: 5px;
 }
-
+/* Problem with table-cell width when clicking on Australia */
+/* Currently the Width is static, which looks beter on most countries */
+/* For some data/countries we will need dinamic */
 #ui-table-data {
   display: flex;
   overflow: scroll;
@@ -68,6 +70,7 @@
 .table-cell {
   display: flex;
   flex-direction: column;
+  width: 120px;
 }
 .table-header {
   background-color: cadetblue;
