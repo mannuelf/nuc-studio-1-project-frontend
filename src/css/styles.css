@@ -87,3 +87,8 @@
   padding: 0 0.5em;
   font-size: 0.9em;
 }
+
+.button-holder {
+  position: absolute;
+  top: 0;
+}
