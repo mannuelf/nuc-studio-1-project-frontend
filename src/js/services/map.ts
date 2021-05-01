@@ -3,6 +3,7 @@
  * */
 import mapboxgl from 'mapbox-gl';
 import { getPopulationLevelsData } from '../models/factbookExplorerApi';
+import { getGrossGdpData } from '../models/factbookExplorerApi';
 import getPolygon from '../models/getPolygon';
 import getGeocoding from '../models/getGeocoding';
 import createLegend from '../components/createLegend';
@@ -36,7 +37,8 @@ getGeocoding();
  * */
 export default async function MapBoxService(): Promise<void> {
   let currentCountry = '';
-  let fetchFactbookExplorerApiData = {};
+  let fetchFactbookExplorerApiDataPop = {};
+  let fetchFactbookExplorerApiDataGdp = {};
   let country = '';
 
   /*
@@ -71,6 +73,7 @@ export default async function MapBoxService(): Promise<void> {
         displayProperties.forEach((prop) => {
           displayFeat[prop] = feat[prop];
         });
+        console.log(displayFeat);
         return displayFeat;
       });
 
@@ -81,10 +84,6 @@ export default async function MapBoxService(): Promise<void> {
       }
 
       /*
-       * Draw Polygon around country borders
-       * We will have to do this for ever country using https://geojson.io/,
-       * Mapbox does have an API to automate this, but it costs money.
-       *
        * GET data from our API service on Heroku
        * const getPopulationLevels = await getPopulationLevelsData();
        * const getGrossGdp = await getGrossGdpData();
@@ -92,6 +91,11 @@ export default async function MapBoxService(): Promise<void> {
        * * */
       const renderPopulationLevels = async (country) => {
         const data = await getPopulationLevelsData(country);
+        return data;
+      };
+
+      const renderGrossGdpData = async (country) => {
+        const data = await getGrossGdpData(country);
         return data;
       };
 
@@ -119,15 +123,49 @@ export default async function MapBoxService(): Promise<void> {
        * API call to python backend to get country specific data.
        * displayFeatures is data gotten from mapbox
        * */
+
       const cachedFeatures = displayFeatures;
-      fetchFactbookExplorerApiData = await renderPopulationLevels(country);
-      console.log(fetchFactbookExplorerApiData);
-      cachedFeatures.push(fetchFactbookExplorerApiData);
-      const [, renderCountry] = cachedFeatures;
+
+      const changeInfoToPop = (country: string) => {
+        console.log('working 1');
+        uiInfoBox.innerHTML = `
+            <h1 class="is-size-3">${country}</h1>
+            <h2 class="is-size-5">Population levels</h2>
+            <p>Growth year on year in Thousands</p>
+            <div class="table-results">
+              ${renderTableRow(country) ? renderTableRow(country) : ''}
+            </div>
+        `;
+      };
+      const changeInfoToGDP = (country: string) => {
+        uiInfoBox.innerHTML = `
+            <h1 class="is-size-3">${country}</h1>
+            <h2 class="is-size-5">Gross Domestic Product</h2>
+            <p>Something</p>
+            <div class="table-results">
+              ${renderTableRow(country) ? renderTableRow(country) : ''}
+            </div>
+        `;
+      };
+      const showPopulation = async () => {
+        fetchFactbookExplorerApiDataPop = await renderPopulationLevels(country);
+        console.log(fetchFactbookExplorerApiDataPop);
+        cachedFeatures.push(fetchFactbookExplorerApiDataPop);
+        const [, renderCountry] = cachedFeatures;
+        changeInfoToPop(country);
+      };
+      const showGdp = async () => {
+        fetchFactbookExplorerApiDataGdp = await renderGrossGdpData(country);
+        console.log(fetchFactbookExplorerApiDataGdp);
+        cachedFeatures.push(fetchFactbookExplorerApiDataGdp);
+        const [, renderCountry] = cachedFeatures;
+        changeInfoToGDP(country);
+      };
 
       const renderTableRow = (country: string) => {
         const tableData = renderCountry[country];
         uiTable.innerHTML = '';
+        console.log("working 2")
         for (let prop in tableData) {
           const item = document.createElement('div');
           item.classList.add('table-cell');
@@ -148,14 +186,8 @@ export default async function MapBoxService(): Promise<void> {
         }
       };
 
-      uiInfoBox.innerHTML = `
-            <h1 class="is-size-3">${country}</h1>
-            <h2 class="is-size-5">Population levels</h2>
-            <p>Growth year on year in Thousands</p>
-            <div class="table-results">
-              ${renderTableRow(country) ? renderTableRow(country) : ''}
-            </div>
-        `;
+      document.getElementById('pop').addEventListener('click', showPopulation);
+      document.getElementById('gdp').addEventListener('click', showGdp);
 
       /*
        *
