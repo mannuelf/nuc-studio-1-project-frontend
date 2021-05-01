@@ -12,20 +12,20 @@ export const getPopulationLevelsData = async (
   country: Country
 ): Promise<any> => {
   try {
-    const resp = await axios.get(`${API_BASE_URL}/population-levels`);
+    const result = await axios.get(`${API_BASE_URL}/population-levels`);
 
-    uiInfoBox.innerHTML = 'Loading data...';
+    // uiInfoBox.innerHTML = 'Loading data for Population...';
 
-    const { data } = resp;
+    const { data } = result;
     const countries = data[0];
-    const result = Object.keys(countries)
+    const resp = Object.keys(countries)
       .filter((key) => key.includes(country))
       .reduce((obj, key) => {
         obj[key] = countries[key];
         return obj;
       }, {});
 
-    return result;
+    return resp;
   } catch (error) {
     uiInfoBox.innerHTML = `${error}`;
     throw new Error(error);
@@ -37,12 +37,15 @@ export const getPopulationLevelsData = async (
 export const getGrossGdpData = async (country: Country): Promise<any> => {
   try {
     const result = await axios.get(`${API_BASE_URL}/gross-gdp`);
+
+    // uiInfoBox.innerHTML = 'Loading data for GDP...';
+
     const { data } = result;
-    const allData = data[0];
-    const resp = Object.keys(allData)
+    const countries = data[0];
+    const resp = Object.keys(countries)
       .filter((key) => key.includes(country))
       .reduce((obj, key) => {
-        obj[key] = allData[key];
+        obj[key] = countries[key];
         return obj;
       }, {});
     return resp;
