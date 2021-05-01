@@ -176,7 +176,7 @@ export default async function MapBoxService(): Promise<void> {
         source: country, // reference the data source
         layout: {},
         paint: {
-          'fill-color': '#E31A1C', // color for fill
+          'fill-color': '#FC4E2A', // color for fill
           'fill-opacity': 0.3,
         },
       });
