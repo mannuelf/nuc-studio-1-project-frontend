@@ -14,7 +14,7 @@ export const getPopulationLevelsData = async (
   try {
     const result = await axios.get(`${API_BASE_URL}/population-levels`);
 
-    // uiInfoBox.innerHTML = 'Loading data for Population...';
+    uiInfoBox.innerHTML = 'Loading data for Population...';
 
     const { data } = result;
     const countries = data[0];
@@ -38,7 +38,7 @@ export const getGrossGdpData = async (country: Country): Promise<any> => {
   try {
     const result = await axios.get(`${API_BASE_URL}/gross-gdp`);
 
-    // uiInfoBox.innerHTML = 'Loading data for GDP...';
+    uiInfoBox.innerHTML = 'Loading data for GDP...';
 
     const { data } = result;
     const countries = data[0];
