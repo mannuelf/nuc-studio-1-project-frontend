@@ -150,8 +150,8 @@ export default async function MapBoxService(): Promise<void> {
       uiInfoBox.innerHTML = `
             <h1 class="is-size-3">${country}</h1>
             <h2 class="is-size-5">Population levels</h2>
-            <p>Growth year on year in Thousands</p>
-            <div class="table-results">
+            <p class="is-size-7 has-text-link-light has-background-info-dark pt-1 pb-1 pl-1 pr-1" title="scroll over table">Growth year on year in Thousands</p>
+            <div class="table-results" title="scroll right and left">
               ${renderTableRow(country) ? renderTableRow(country) : ''}
             </div>
         `;
