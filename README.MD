@@ -20,6 +20,13 @@ This project is built with node.js and ParcelJs, install both on your machine.
 
 ## To develop
 
+Clone repo: https://github.com/mannuelf/nuc-studio-1-project-frontend/
+
+```bash
+git clone https://github.com/mannuelf/nuc-studio-1-project-frontend/
+cd nuc-studio-1-project-frontend
+```
+
 Install the npm packages using the terminal. This will install ParcelJs a modern bundler. [https://parceljs.org/](https://parceljs.org/)
 
 ```bash
