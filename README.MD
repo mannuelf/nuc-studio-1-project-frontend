@@ -12,6 +12,10 @@ This project is built with node.js and ParcelJs, install both on your machine.
 
 [https://parceljs.org/](https://parceljs.org/)
 
+## Screenshot of UI.
+![factbook-explorers](https://user-images.githubusercontent.com/210504/116806980-da0d0b80-ab30-11eb-9f1e-91d1254ea3e2.png)
+
+
 ## To develop
 
 Install the npm packages using the terminal. This will install ParcelJs a modern bundler. [https://parceljs.org/](https://parceljs.org/)
