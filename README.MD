@@ -56,6 +56,27 @@ MAPBOX_STYLE_URL=" place your style url here"
 
 The config module will use NODE.JS's `NODE_ENV=*` key to extract your keys out of the environment variable files and make your key available in the scope of any JS module you create.
 
+## Contribution Guidlines
+
+We are using Github Issue and Project board to manage tasks.
+
+[https://github.com/mannuelf/nuc-studio-1-project-frontend/issues](https://github.com/mannuelf/nuc-studio-1-project-frontend/issues)
+
+[https://github.com/mannuelf/nuc-studio-1-project-frontend/projects/1](https://github.com/mannuelf/nuc-studio-1-project-frontend/projects/1)
+
+To contribute:
+
+Create and issue using the issus board.
+
+1. Assign it to yourself and
+2. Label it using appropriate label
+3. ![image](https://user-images.githubusercontent.com/210504/116896362-766c0680-ac34-11eb-91f1-7fb7928bbd3c.png)
+
+### Coding
+1. Fork Repo or if you on the team already create a feature branch
+2. Work on your task
+3. Create a Pull Request.
+
 ## But why?
 
 We want to write with modern ES6 JavaScript with imports & exports + TypeScript. I have made the files TypeScript so that we can get better error linting.
