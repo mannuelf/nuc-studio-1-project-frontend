@@ -56,7 +56,7 @@ MAPBOX_STYLE_URL=" place your style url here"
 
 The config module will use NODE.JS's `NODE_ENV=*` key to extract your keys out of the environment variable files and make your key available in the scope of any JS module you create.
 
-## Contribution Guidlines
+## Contribution Guidelines
 
 We are using Github Issue and Project board to manage tasks.
 
