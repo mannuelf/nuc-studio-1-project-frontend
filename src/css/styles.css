@@ -68,6 +68,7 @@
 .table-cell {
   display: flex;
   flex-direction: column;
+  width: 84px;
 }
 .table-header {
   background-color: cadetblue;
@@ -83,4 +84,5 @@
   border-right: 1px solid #fff;
   padding: 0 0.5em;
   font-size: 0.9em;
+  width: inherit;
 }
