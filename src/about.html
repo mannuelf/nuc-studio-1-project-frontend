@@ -44,7 +44,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="./css/styles.css" />
-     <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-ZFD2RY326N"
@@ -72,33 +72,7 @@
             Explorers</span
           >
         </a>
-
-        <form id="searchBar" class="mt-3 ml-2 field has-addons">
-          <div class="control">
-            <label for="search" class="is-sr-only">Search for country</label>
-            <input class="input" type="search" placeholder="Enter country" />
-          </div>
-          <div class="control">
-            <button class="button is-normal">
-              <span class="icon">
-                <i class="fas fa-search"></i>
-              </span>
-            </button>
-          </div>
-        </form>
-
-        <a
-          role="button"
-          class="navbar-burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
+     </div>
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
@@ -127,12 +101,40 @@
     </nav>
 
     <div class="container">
-      <div class="ui-map-section">
+      <div class="ui-map-section content">
         <h1 class="is-size-1">About</h1>
         <p>
           Click on country to see statistical information like population growth
           year on year.
         </p>
+
+   <h2 class="is-size-2">Source code</h2>
+        <p>This code is available to read on Github</p>
+        <div class="columns">
+          <div class="column">
+            <h3>Frontend</h3>
+            <ul type="I">
+              <li>TypeScript</li>
+              <li>CSS: Bulma</li>
+              <li>MapBox API</li>
+            </ul>
+            <p><a href="https://github.com/mannuelf/nuc-studio-1-project-frontend" target="_blank">Read Frontend code</a>
+          </div>
+          <div class="column">
+        
+            <h3>Backend</h3>
+            <ul type="I">
+              <li>python</li>
+              <li>Flask</li>
+              <li>Pandas</li>
+              <li>OECD Data</li>
+            </ul>
+            <a href="https://github.com/mannuelf/nuc-studio-1-project-backend" target="_blank">Read Backend code</a>
+          </div>
+        </div>
+
+
+
         <h2 class="is-size-2">OECD Data</h2>
         <p>
           <a
@@ -176,8 +178,7 @@
           information it contains may not be retained. POI(s) provided by
           Foursquare.
         </p>
-      </div>
+       </div>
     </div>
-    <script src="./js/app.ts"></script>
   </body>
 </html>
