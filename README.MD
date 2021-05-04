@@ -70,12 +70,16 @@ Create and issue using the issus board.
 
 1. Assign it to yourself and
 2. Label it using appropriate label
-3. ![image](https://user-images.githubusercontent.com/210504/116896362-766c0680-ac34-11eb-91f1-7fb7928bbd3c.png)
+3. Assign issue to Project
+![image](https://user-images.githubusercontent.com/210504/116896362-766c0680-ac34-11eb-91f1-7fb7928bbd3c.png)
 
 ### Coding
-1. Fork Repo or if you on the team already create a feature branch
-2. Work on your task
-3. Create a Pull Request.
+
+1. keep `main` branch clean and deployable at all times, do not code on it.
+2. Fork Repo or 
+3. if already on the team create a feature branch
+4. Work on your task
+5. Create a Pull Request.
 
 ## But why?
 
