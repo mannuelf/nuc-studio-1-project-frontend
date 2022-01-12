@@ -4,6 +4,16 @@ Demo URL: [https://factbookexplorers.netlify.app/](https://factbookexplorers.net
 
 Data source: https://www.oecd-ilibrary.org/economics/oecd-factbook_18147364 
 
+### Backend
+
+Python Flask API: [https://github.com/mannuelf/nuc-studio-1-project-backend](https://github.com/mannuelf/nuc-studio-1-project-backend)
+
+#### ENPOINTS
+
+[https://factbook-explorers-two.herokuapp.com/population-levels](https://factbook-explorers-two.herokuapp.com/population-levels)
+
+[https://factbook-explorers-two.herokuapp.com/gross-gdp](https://factbook-explorers-two.herokuapp.com/gross-gdp)
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/716d0bd0-6c7c-4897-bb4c-bc548927b03e/deploy-status)](https://app.netlify.com/sites/factbookexplorers/deploys)
 
 ## Built with
