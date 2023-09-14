@@ -4,7 +4,7 @@
   "description": "Factbook Explorer, read economic data about your country.",
   "scripts": {
     "start": "parcel src/*.html",
-    "build": "parcel build"
+    "build": "parcel build src/*.html"
   },
   "repository": {
     "type": "git",
