@@ -1,14 +1,14 @@
 import axios from 'axios';
-import { 
+import {
   ENDPOINT_GEOCODING,
-  MAPBOX_TOKEN 
+  MAPBOX_TOKEN,
 } from '../config/constants';
 import { map } from '../services/map';
-import { Ibbox } from '../global.d';
+import type { Ibbox } from '../global.d';
 
-export let bBoxCoords = [];
+let bBoxCoords = [];
 
-export default async function getGeocoding() {
+const getGeocoding = async () => {
   const searchForm = document.querySelector('#searchBar') as HTMLFormElement;
 
   searchForm.addEventListener('submit', async (e: any): Promise<Ibbox> => {
@@ -28,5 +28,7 @@ export default async function getGeocoding() {
     // clear the input text
     searchInput.value = '';
     return bbox;
-  }
-}
+  });
+};
+
+export default getGeocoding;

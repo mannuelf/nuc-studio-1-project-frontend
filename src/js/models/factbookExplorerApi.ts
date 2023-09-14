@@ -9,7 +9,7 @@ import { uiInfoBox } from '../services/map';
 // The data should be flat json like object with properties and values
 // the mapbox map should call this service and get the data is needs
 export const getPopulationLevelsData = async (
-  country: Country
+  country: Country,
 ): Promise<any> => {
   try {
     const resp = await axios.get(`${API_BASE_URL}/population-levels`);

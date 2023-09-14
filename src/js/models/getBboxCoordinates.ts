@@ -10,12 +10,12 @@ import { Country, Ibbox } from '../global.d';
  * this can be changed.
  * */
 export default async function getBboxCoordinates(
-  country: Country
+  country: Country,
 ): Promise<Ibbox> {
   try {
     let bbox = [];
     const resp = await axios.get(
-      `${ENDPOINT_GEOCODING}/${country}.json?limit=1&access_token=${MAPBOX_TOKEN}`
+      `${ENDPOINT_GEOCODING}/${country}.json?limit=1&access_token=${MAPBOX_TOKEN}`,
     );
     const [bboxCoordinates] = resp.data.features;
     bbox = bboxCoordinates.bbox;
